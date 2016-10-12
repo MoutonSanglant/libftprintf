@@ -1,0 +1,26 @@
+### Vim Files ###
+*.swp
+*.netrwhist
+
+
+### Valgrind Files ###
+*.dSYM
+vgcore.*
+
+
+### OSX Files ###
+*._*
+.DS_Store
+
+
+### Object files ###
+*.o
+
+
+### Libraries ###
+*.a
+!/lib/*
+
+
+### Temporary files ###
+_*
