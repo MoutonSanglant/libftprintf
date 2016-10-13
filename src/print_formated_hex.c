@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:07 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/03 09:00:53 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/13 19:45:01 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,34 @@
 
 static void		justify(char *str, t_fdata *fdatas)
 {
+	return;
 	while (fdatas->precision-- > 0)
 		fdatas->out = ft_strconcat(fdatas->out, "0");
 	fdatas->out = ft_strconcat(fdatas->out, str);
 }
 
-static char		*str_from_arg(va_list *ap, t_fdata *fdatas)
+static char		*str_from_arg(t_fdata *fdatas)
 {
 	if (fdatas->length == LENGTH_NONE)
-		return (ft_itoa_base((unsigned int)va_arg(*ap, unsigned int), 16));
+		return (ft_itoa_base((unsigned int)va_arg(*fdatas->ap, unsigned int), 16));
 	else if (fdatas->length & LENGTH_Z)
-		return (ft_itoa_base((size_t)va_arg(*ap, size_t), 16));
+		return (ft_itoa_base((size_t)va_arg(*fdatas->ap, size_t), 16));
 	else if (fdatas->length & LENGTH_J)
-		return (ft_itoa_base((uintmax_t)va_arg(*ap, uintmax_t), 16));
+		return (ft_itoa_base((uintmax_t)va_arg(*fdatas->ap, uintmax_t), 16));
 	else if (fdatas->length & LENGTH_LL)
-		return (ft_itoa_base((uint64_t)va_arg(*ap, uint64_t), 16));
+		return (ft_itoa_base((uint64_t)va_arg(*fdatas->ap, uint64_t), 16));
 	else if (fdatas->length & LENGTH_L)
-		return (ft_itoa_base((unsigned long)va_arg(*ap, unsigned long), 16));
+		return (ft_itoa_base((unsigned long)va_arg(*fdatas->ap, unsigned long), 16));
 	else if (fdatas->length & LENGTH_H)
-		return (ft_itoa_base((unsigned short)va_arg(*ap, unsigned int), 16));
+		return (ft_itoa_base((unsigned short)va_arg(*fdatas->ap, unsigned int), 16));
 	else if (fdatas->length & LENGTH_HH)
-		return (ft_itoa_base((unsigned char)va_arg(*ap, unsigned int), 16));
+		return (ft_itoa_base((unsigned char)va_arg(*fdatas->ap, unsigned int), 16));
 	return (NULL);
 }
 
 static void		print_hex_string(t_fdata *fdatas, char *str, char specifier)
 {
+	return;
 	if (fdatas->flag & FLAG_NUMBERSIGN)
 	{
 		fdatas->width -= 2;
@@ -67,14 +69,14 @@ static void		print_hex_string(t_fdata *fdatas, char *str, char specifier)
 	}
 }
 
-void			print_formated_hex(va_list *ap, t_fdata *fdatas,
+void			print_formated_hex(t_fdata *fdatas,
 										char specifier)
 {
 	char	*str;
 	int		len;
 	int		i;
 
-	str = str_from_arg(ap, fdatas);
+	str = str_from_arg(fdatas);
 	if (str[0] == '0')
 	{
 		if (fdatas->precision == 0)

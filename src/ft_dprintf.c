@@ -6,12 +6,16 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:22 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/03 08:56:14 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/13 16:06:14 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
+/*
+** write on filedescriptor fd
+** returns number of character printed
+*/
 int			ft_vdprintf(int fd, const char *restrict format, va_list *ap)
 {
 	char	*output;

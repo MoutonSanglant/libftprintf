@@ -32,7 +32,8 @@ endif
 SRC_PREFIX = ./src/
 OBJ_PREFIX = ./obj/
 
-SRC		=	get_formated_argument \
+SRC		=	parse \
+			buffer \
 			print_formated_string \
 			print_formated_digit \
 			print_formated_hex \

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:32 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/03 09:00:53 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/13 19:45:36 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void		justify(char c, t_fdata *fdatas)
 {
+	return;
 	if (fdatas->flag & FLAG_SPACE)
 		fdatas->out = ft_strconcat(fdatas->out, " ");
 	if (ft_isprint(c))
@@ -45,9 +46,9 @@ void			print_formated_space(const char *format, t_fdata *fdatas)
 	fdatas->width--;
 	while (fdatas->width > 0)
 	{
-		if (!(fdatas->flag & FLAG_MORE) || fdatas->width > 1)
-			fdatas->out = ft_strnconcat(fdatas->out,
-												fdatas->fill_char, 1);
+		//if (!(fdatas->flag & FLAG_MORE) || fdatas->width > 1)
+		//	fdatas->out = ft_strnconcat(fdatas->out,
+		//										fdatas->fill_char, 1);
 		fdatas->width--;
 	}
 	if (!(fdatas->flag & FLAG_LESS))

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_formated_argument.c                            :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/01 21:45:40 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/01 21:48:52 by tdefresn         ###   ########.fr       */
+/*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
+/*   Updated: 2016/10/13 21:41:26 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,51 +87,91 @@ static int			is_long(const char *spec)
 	return (0);
 }
 
-static int			check_common_spec(va_list *ap, t_fdata *fdatas,
+static int			check_common_spec(t_fdata *fdatas,
 											const char *spec)
 {
 	if (*spec == 's' || *spec == 'S')
-		print_formated_string(ap, fdatas, NULL);
+		print_formated_string(fdatas, NULL);
 	else if (*spec == 'p')
-		print_formated_pointer(ap, fdatas);
+		print_formated_pointer(fdatas);
 	else if (*spec == 'i' || *spec == 'd' || *spec == 'D')
-		print_formated_digit(ap, fdatas);
+		print_formated_digit(fdatas);
 	else if (*spec == 'o' || *spec == 'O')
-		print_formated_octal(ap, fdatas);
+		print_formated_octal(fdatas);
 	else if (*spec == 'u' || *spec == 'U')
-		print_formated_unsigned(ap, fdatas);
+		print_formated_unsigned(fdatas);
 	else if (*spec == 'x' || *spec == 'X')
-		print_formated_hex(ap, fdatas, *spec);
+		print_formated_hex(fdatas, *spec);
 	else
 		return (0);
 	return (1);
 }
 
-const char			*get_formated_argument(va_list *ap,
-									const char *format, t_fdata *fdatas)
+static void			expand(const char *format, t_fdata *fdatas)
 {
 	const char	*spec;
 
+	fdatas->expand = 1;
+	//parse(format, fdatas);
 	if (!(spec = ft_strpbrk(format, "sSpdDioOuUxXcC%")))
 		spec = get_format_datas(format, format + ft_strlen(format), fdatas);
 	else
 		spec = get_format_datas(format, spec, fdatas);
 	if (is_long(spec))
 		fdatas->length = LENGTH_L;
-	if (!check_common_spec(ap, fdatas, spec))
+	if (!check_common_spec(fdatas, spec))
 	{
 		if (*spec == 'c')
 		{
-			if (print_formated_char(ap, fdatas) < 0)
-				return (NULL);
+			if (print_formated_char(fdatas) < 0)
+				return ;
 		}
 		else if (*spec == 'C')
 		{
-			if (print_formated_widechar(ap, fdatas) < 0)
-				return (NULL);
+			if (print_formated_widechar(fdatas) < 0)
+				return ;
 		}
 		else
 			print_formated_space(spec, fdatas);
 	}
-	return (spec);
+	return;
+}
+
+#include <stdio.h>
+#include <string.h>
+// ILEGAL: strndup
+
+void				parse(const char *format, t_fdata *fdatas)
+{
+	fdatas->expand = 0;
+
+	//int			padding;
+	//int			spec_dist;
+
+	// Distance jusau'au %'
+	//spec_dist = spec_char_ptr - format;
+
+	// Sur le '%'
+	if (*format == '%')
+	{
+		printf("found %%\n");
+		fflush(stdout);
+		//padding = fdatas->bcount;
+		// copy the expanded result into output
+		expand(&format[1], fdatas);
+
+		/*
+		padding = fdatas->bcount - padding;
+		if (padding <= 0)
+			return (-1); // experimental
+		if (parse(&format[padding], fdatas))
+		*/
+	}
+	else
+	{
+		//fdatas->bcount += spec_dist;
+		//parse(&format[spec_dist], fdatas);
+		//write_to_buffer(format, spec_dist, fdatas);
+		write_to_buffer(format, fdatas->bcount, fdatas);
+	}
 }

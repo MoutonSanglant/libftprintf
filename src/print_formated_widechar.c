@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:54 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/03 09:00:54 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/13 19:46:18 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 static void		justify(wint_t *c, t_fdata *fdatas)
 {
+	return;
 	char	*str;
 	int		ret;
 
@@ -54,12 +55,12 @@ static int		unicode_length(t_fdata *fdatas, wint_t c)
 	return (0);
 }
 
-int				print_formated_widechar(va_list *ap, t_fdata *fdatas)
+int				print_formated_widechar(t_fdata *fdatas)
 {
 	wint_t	c;
 	int		unicode_len;
 
-	c = (wint_t)va_arg(*ap, wint_t);
+	c = (wint_t)va_arg(*fdatas->ap, wint_t);
 	unicode_len = unicode_length(fdatas, c);
 	if (unicode_len < 0)
 		return (-1);
@@ -70,8 +71,8 @@ int				print_formated_widechar(va_list *ap, t_fdata *fdatas)
 		justify(&c, fdatas);
 	while (fdatas->width > 0)
 	{
-		if (!(fdatas->flag & FLAG_MORE) || fdatas->width > 1)
-			fdatas->out = ft_strnconcat(fdatas->out, fdatas->fill_char, 1);
+		//if (!(fdatas->flag & FLAG_MORE) || fdatas->width > 1)
+		//	fdatas->out = ft_strnconcat(fdatas->out, fdatas->fill_char, 1);
 		fdatas->width--;
 	}
 	if (!(fdatas->flag & FLAG_LESS))

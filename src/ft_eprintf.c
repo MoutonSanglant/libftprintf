@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:27 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/01 21:48:06 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/13 16:06:33 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 **	#define ft_eprintf(format, ...) ft_dprintf(stderr, format, __VA_ARGS__)
 */
 
+/*
+** write on stderr
+** returns number of character printed
+*/
 int					ft_veprintf(const char *restrict format, va_list *ap)
 {
 	return (ft_vdprintf(2, format, ap));

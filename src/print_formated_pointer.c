@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/01 21:48:44 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/13 18:08:15 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ static void		remove_extra_flags(t_fdata *fdatas)
 		fdatas->flag |= FLAG_LESS;
 }
 
-void			print_formated_pointer(va_list *ap, t_fdata *fdatas)
+void			print_formated_pointer(t_fdata *fdatas)
 {
 	char	*str;
 	char	*s;
 	char	*join;
 
-	str = va_arg(*ap, char *);
+	str = va_arg(*fdatas->ap, char *);
 	if (str)
 		s = ft_itoa_base((uintptr_t)str, 16);
 	else if (fdatas->precision == 0)
@@ -44,7 +44,7 @@ void			print_formated_pointer(va_list *ap, t_fdata *fdatas)
 		fdatas->width--;
 	}
 	join = ft_strjoin("0x", s);
-	print_formated_string(ap, fdatas, join);
+	print_formated_string(fdatas, join);
 	ft_strdel(&s);
 	ft_strdel(&join);
 }

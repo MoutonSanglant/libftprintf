@@ -61,8 +61,17 @@ typedef enum	e_flength
 	LENGTH_Z = 0x20
 }				t_flength;
 
+/*
+** t_fdata
+** 8 + 8 + 8 + [4 + 4] + [4 + 4]
+** offset: 8
+** size: 40
+** lost: 0
+*/
+
 typedef struct	s_fdata
 {
+	va_list		*ap;
 	char		*out;
 	const char	*format;
 	char		*fill_char;
@@ -71,22 +80,25 @@ typedef struct	s_fdata
 	int			width;
 	int			precision;
 	int			bcount;
+	int			expand;
+	int			idx;
 }				t_fdata;
 
+void			parse(const char *format, t_fdata *fdatas);
 
-int				print_formated_char(va_list *ap, t_fdata *fdatas);
-int				print_formated_widechar(va_list *ap, t_fdata *fdatas);
-void			print_formated_string(va_list *ap, t_fdata *fdatas, char *s);
-void			print_formated_pointer(va_list *ap, t_fdata *fdatas);
-void			print_formated_digit(va_list *ap, t_fdata *fdatas);
-void			print_formated_octal(va_list *ap, t_fdata *fdatas);
-void			print_formated_hex(va_list *ap, t_fdata *fdatas,
-															char specifier);
-void			print_formated_unsigned(va_list *ap, t_fdata *fdatas);
+void			write_to_buffer(const char *str, int count, t_fdata *fdatas);
+
+int				print_formated_char(t_fdata *fdatas);
+int				print_formated_widechar(t_fdata *fdatas);
+void			print_formated_string(t_fdata *fdatas, char *s);
+void			print_formated_pointer(t_fdata *fdatas);
+void			print_formated_digit(t_fdata *fdatas);
+void			print_formated_octal(t_fdata *fdatas);
+void			print_formated_hex(t_fdata *fdatas, char specifier);
+void			print_formated_unsigned(t_fdata *fdatas);
 void			print_formated_space(const char *format, t_fdata *fdatas);
 
-const char		*get_formated_argument(va_list *ap, const char *format,
-															t_fdata *fdatas);
+
 int				ft_putwchar(wchar_t *unicode_point);
 char			*ft_towstr(wchar_t *unicode_point, int *len);
 

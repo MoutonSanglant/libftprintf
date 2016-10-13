@@ -6,12 +6,16 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:35 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/01 21:48:11 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/13 16:07:16 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
+/*
+** write on filestream stream
+** returns number of character printed
+*/
 #ifdef FORBIDDEN
 
 int			ft_vfprintf(FILE *stream, const char *restrict format, va_list *ap)
