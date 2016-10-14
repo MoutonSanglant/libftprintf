@@ -7,12 +7,23 @@ int main(void)
 	wchar_t	*wstr;
 	wchar_t	*unicodestr;
 	int		length;
+	int		nb;
+
+	nb = 42;
 
 	setlocale(LC_ALL, "fr_FR.UTF-8");
 
+	ft_printf("p: %p\n", &length);
+	printf("p: %p\n", &length);
+	fflush(stdout);
+
+	ft_printf("%+i\neee\n", nb);
+	printf("%+i\n", nb);
+	fflush(stdout);
+	return (0);
+
 	ft_printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
 	printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
-	//printf("%%\n");
 	fflush(stdout);
 
 	return (0);

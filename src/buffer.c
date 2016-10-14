@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 19:02:39 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 21:04:20 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 22:55:16 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,12 @@ static void	*memset_buffer_segment(void *b, int c, size_t len)
 	return (b);
 }
 
-void	write_format(const void *src, int wcount, t_fdata *fdatas, void (*fn)(void *dst, const void *, size_t n))
+// width: nombre d'octets a imprimer
+// precision: nombre minimum de caracteres a afficher
+void	write_format(const void *src, int wcount, t_fdata *fdatas, void (*cpy_fn)(void *dst, const void *, size_t n))
 {
-	int idx;
-	int str_len;
+	int		idx;
+	int		str_len;
 
 	idx = fdatas->bcount;
 	str_len = wcount;
@@ -48,17 +50,25 @@ void	write_format(const void *src, int wcount, t_fdata *fdatas, void (*fn)(void 
 		write(1, "!! error !!", 12);
 	}
 	int precision = (fdatas->precision > str_len) ? fdatas->precision : str_len;
-	int width = fdatas->width;
+	int width = (fdatas->width < precision) ? precision : fdatas->width;
 
-	if (width < precision)
+	if (fdatas->flag & (FLAG_MORE | FLAG_SPACE))
+	{
+		if (width <= str_len)
+			width++;
+	}
+	//int width = fdatas->width;
+
+	/*if (width < precision)
 	{
 		width = precision;
 
-		if (fdatas->flag & FLAG_LESS && fdatas->flag & (FLAG_MORE | FLAG_SPACE))
-			width++;
+		//if (fdatas->flag & FLAG_LESS && fdatas->flag & (FLAG_MORE | FLAG_SPACE))
+		//	width++;
 	}
 	else if (!(fdatas->flag & FLAG_LESS) && fdatas->flag & (FLAG_MORE | FLAG_SPACE))
 		idx--;
+		*/
 
 	//printf("[dump]\nstr: %s\nlength: %i\nprecision: %i\nwidth: %i\n", src, str_len, precision, width);
 
@@ -70,13 +80,19 @@ void	write_format(const void *src, int wcount, t_fdata *fdatas, void (*fn)(void 
 	// print default width
 	memset_buffer_segment(&fdatas->out[idx], (int)*fdatas->fill_char, width);
 
-	// padding (right/left)
-	if (!(fdatas->flag & FLAG_LESS))
-		idx += width - precision;
 
 	// print ' ' or '+' sign
 	if (fdatas->flag & (FLAG_MORE | FLAG_SPACE))
-		fdatas->out[idx++] = (FLAG_MORE) ? '+' : ' ';
+	{
+		fdatas->out[idx] = (fdatas->flag & FLAG_MORE) ? '+' : ' ';
+		//precision++;
+		if (fdatas->flag & FLAG_LESS)
+			idx++;
+	}
+
+	// padding (right/left)
+	if (!(fdatas->flag & FLAG_LESS))
+		idx += width - precision;
 
 
 	// print default precision
@@ -85,10 +101,9 @@ void	write_format(const void *src, int wcount, t_fdata *fdatas, void (*fn)(void 
 	// write offset
 	idx += precision - str_len;
 
-	if (!fn)
-		fn = &cpy_to_buffer;
+	cpy_fn = (cpy_fn) ? cpy_fn : &cpy_to_buffer;
 
-	fn(&fdatas->out[idx], src, wcount);
+	cpy_fn(&fdatas->out[idx], src, wcount);
 }
 
 void	write_to_buffer(const void *src, int wcount, t_fdata *fdatas)

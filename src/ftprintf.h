@@ -21,6 +21,7 @@
 # include "libftprintf.h"
 
 # define HEX_TABLE(x) "0123456789abcdef"[x]
+# define HEX_TABLE_UPPER(x) "0123456789ABCDEF"[x]
 # define HEX_CHECK(s) (s == 'x') ? "0x" : "0X"
 
 /*
@@ -71,6 +72,7 @@ typedef enum	e_flength
 
 typedef struct	s_fdata
 {
+	void		(*numbersign)(char *, struct s_fdata *);
 	va_list		*ap;
 	char		*out;
 	const char	*format;
@@ -88,7 +90,7 @@ typedef struct	s_fdata
 void			parse(const char *format, t_fdata *fdatas);
 
 void			write_to_buffer(const void *str, int count, t_fdata *fdatas);
-void			write_format(const void *str, int count, t_fdata *fdatas, void (*fn)(void *, const void *, size_t));
+void			write_format(const void *str, int count, t_fdata *fdatas, void (*cpy_fn)(void *, const void *, size_t));
 
 int				print_formated_char(t_fdata *fdatas);
 int				print_formated_widechar(t_fdata *fdatas);

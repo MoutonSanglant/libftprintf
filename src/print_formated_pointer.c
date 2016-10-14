@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 20:34:42 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 22:59:46 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void		remove_extra_flags(t_fdata *fdatas)
 /*
 ** Write numbers backward then write '0x' forward
 */
+/*
 static void	conversion(void *dst, const void *src, size_t n)
 {
 	char		*to;
@@ -51,9 +52,15 @@ static size_t		nblen(uintptr_t value)
 		l++;
 	return (l + 2);
 }
+*/
 
 void			print_formated_pointer(t_fdata *fdatas)
 {
+	remove_extra_flags(fdatas);
+	fdatas->length = LENGTH_LL;
+	fdatas->flag |= FLAG_NUMBERSIGN;
+	print_formated_hex(fdatas, 'x');
+	/*
 	uintptr_t	value;
 
 	value = va_arg(*fdatas->ap, uintptr_t);
@@ -64,6 +71,7 @@ void			print_formated_pointer(t_fdata *fdatas)
 		write_format("", 0, fdatas, NULL);
 	else
 		write_format("0", 1, fdatas, NULL);
+		*/
 	/*
 	fdatas->precision -= ft_strlen(s) + 1;
 	while (fdatas->precision >= 0)

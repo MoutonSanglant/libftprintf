@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:07 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 20:34:42 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 23:01:50 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,26 @@ static void		justify(char *str, t_fdata *fdatas)
 }
 */
 
-static char		*str_from_arg(t_fdata *fdatas)
+static uintmax_t	get_arg_value(t_fdata *fdatas)
 {
+	uintmax_t	value;
+
+	value = 0;
 	if (fdatas->length == LENGTH_NONE)
-		return (ft_itoa_base((unsigned int)va_arg(*fdatas->ap, unsigned int), 16));
+		value = (uintmax_t)va_arg(*fdatas->ap, unsigned int);
 	else if (fdatas->length & LENGTH_Z)
-		return (ft_itoa_base((size_t)va_arg(*fdatas->ap, size_t), 16));
+		value = (uintmax_t)va_arg(*fdatas->ap, size_t);
 	else if (fdatas->length & LENGTH_J)
-		return (ft_itoa_base((uintmax_t)va_arg(*fdatas->ap, uintmax_t), 16));
+		value = (uintmax_t)va_arg(*fdatas->ap, uintmax_t);
 	else if (fdatas->length & LENGTH_LL)
-		return (ft_itoa_base((uint64_t)va_arg(*fdatas->ap, uint64_t), 16));
+		value = (uintmax_t)va_arg(*fdatas->ap, uint64_t);
 	else if (fdatas->length & LENGTH_L)
-		return (ft_itoa_base((unsigned long)va_arg(*fdatas->ap, unsigned long), 16));
+		value = (uintmax_t)va_arg(*fdatas->ap, unsigned long);
 	else if (fdatas->length & LENGTH_H)
-		return (ft_itoa_base((unsigned short)va_arg(*fdatas->ap, unsigned int), 16));
+		value = (uintmax_t)((unsigned short)va_arg(*fdatas->ap, unsigned int));
 	else if (fdatas->length & LENGTH_HH)
-		return (ft_itoa_base((unsigned char)va_arg(*fdatas->ap, unsigned int), 16));
-	return (NULL);
+		value = (uintmax_t)((unsigned char)va_arg(*fdatas->ap, unsigned int));
+	return (value);
 }
 
 /*
@@ -73,32 +76,112 @@ static void		print_hex_string(t_fdata *fdatas, char *str, char specifier)
 }
 */
 
-void			print_formated_hex(t_fdata *fdatas,
-										char specifier)
+/*
+** Write numbers backward then write '0x' forward
+*/
+static void	conversion(void *dst, const void *src, size_t n)
 {
-	char	*str;
-	int		len;
-	int		i;
+	char		*to;
+	char		*str;
+	uintptr_t	value;
 
-	str = str_from_arg(fdatas);
-	if (str[0] == '0')
+	value = (uintptr_t)*((uintptr_t *)src);
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str >= to)
 	{
-		if (fdatas->precision == 0)
-			str[0] = '\0';
-		fdatas->flag ^= (fdatas->flag & FLAG_NUMBERSIGN)
-							? FLAG_NUMBERSIGN : FLAG_ZERO;
+		*str-- = HEX_TABLE(value % 16);
+		value /= 16;
 	}
-	i = -1;
-	if (specifier == 'X')
-		while (str[++i])
-			str[i] = (char)ft_toupper(str[i]);
-	len = ft_strlen(str);
-	write_format(str, len, fdatas, NULL);
-	/*
-	fdatas->precision = fdatas->precision - len;
-	fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;
-	fdatas->width = fdatas->width - fdatas->precision - len;
-	print_hex_string(fdatas, str, specifier);
-	*/
-	ft_strdel(&str);
+	dst = (void *)str;
+}
+
+static void	conversion_prefixed(void *dst, const void *src, size_t n)
+{
+	char		*to;
+	char		*str;
+	uintptr_t	value;
+
+	value = (uintptr_t)*((uintptr_t *)src);
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str > to)
+	{
+		*str-- = HEX_TABLE(value % 16);
+		value /= 16;
+	}
+	*str++ = '0';
+	*str++ = 'x';
+	dst = (void *)str;
+}
+
+static void	conversion_upper(void *dst, const void *src, size_t n)
+{
+	char		*to;
+	char		*str;
+	uintptr_t	value;
+
+	value = (uintptr_t)*((uintptr_t *)src);
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str >= to)
+	{
+		*str-- = HEX_TABLE_UPPER(value % 16);
+		value /= 16;
+	}
+	dst = (void *)str;
+}
+
+static void	conversion_upper_prefixed(void *dst, const void *src, size_t n)
+{
+	char		*to;
+	char		*str;
+	uintptr_t	value;
+
+	value = (uintptr_t)*((uintptr_t *)src);
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str > to)
+	{
+		*str-- = HEX_TABLE_UPPER(value % 16);
+		value /= 16;
+	}
+	*str++ = '0';
+	*str++ = 'X';
+	dst = (void *)str;
+}
+
+static size_t		nblen(uintptr_t value)
+{
+	size_t		l;
+
+	l = 1;
+	while (value /= 16)
+		l++;
+	return (l);
+}
+
+void			print_formated_hex(t_fdata *fdatas, char specifier)
+{
+	uintmax_t	value;
+	size_t		length;
+	void		(*conversion_fn)(void *, const void *, size_t);
+
+
+	if ((value = get_arg_value(fdatas)))
+	{
+		length = nblen(value);
+		if ((fdatas->flag & FLAG_NUMBERSIGN))
+		{
+			length += 2;
+			conversion_fn = (specifier == 'X') ? &conversion_upper_prefixed : &conversion_prefixed;
+		}
+		else
+			conversion_fn = (specifier == 'X') ? &conversion_upper : &conversion;
+		write_format(&value, length, fdatas, conversion_fn);
+	}
+	else if (fdatas->precision == 0)
+		write_format("", 0, fdatas, NULL);
+	else
+		write_format("0", 1, fdatas, NULL);
 }
