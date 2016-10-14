@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:17 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 05:06:37 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 20:34:42 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void			print_formated_octal(t_fdata *fdatas)
 	//if (fdatas->flag & FLAG_NUMBERSIGN)
 	//	fdatas->precision--;
 	len = ft_strlen(str);
-	write_to_buffer(str, len, fdatas);
+	write_format(str, len, fdatas, NULL);
 	/*
 	fdatas->precision = fdatas->precision - len;
 	fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;

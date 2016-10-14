@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:50 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 05:02:59 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 20:34:42 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int				print_formated_char(t_fdata *fdatas)
 	fdatas->flag ^= (fdatas->flag & FLAG_SPACE) ? FLAG_SPACE : FLAG_NONE;
 	fdatas->flag ^= (fdatas->flag & FLAG_MORE) ? FLAG_MORE : FLAG_NONE;
 
-	write_to_buffer((char *)&c, 1, fdatas);
+	write_format((char *)&c, 1, fdatas, NULL);
 	/*
 	if (fdatas->flag & FLAG_LESS)
 		justify(&c, fdatas);

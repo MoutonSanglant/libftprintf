@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:59 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 03:49:01 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 20:34:42 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ static void		print_prefixes(char **str, t_fdata *fdatas)
 	if ((*str)[0] == '-')
 	{
 		(*str)++;
-		write_to_buffer("-", 1, fdatas);
+		write_format("-", 1, fdatas);
 		//fdatas->out = ft_strconcat(fdatas->out, "-");
 		fdatas->flag ^= (fdatas->flag & FLAG_MORE) ? FLAG_MORE : FLAG_NONE;
 	}
 	else if (fdatas->flag & FLAG_MORE)
-		write_to_buffer("+", 1, fdatas);
+		write_format("+", 1, fdatas);
 		//fdatas->out = ft_strconcat(fdatas->out, "+");
 	else if (fdatas->flag & FLAG_SPACE)
-		write_to_buffer(" ", 1, fdatas);
+		write_format(" ", 1, fdatas);
 		//fdatas->out = ft_strconcat(fdatas->out, " ");
 }
 */
@@ -38,14 +38,14 @@ static void		justify_left(t_fdata *fdatas, char *str)
 	if (str[0] == '-' || (fdatas->flag & (FLAG_MORE | FLAG_SPACE)))
 		print_prefixes(&str, fdatas);
 	while (fdatas->precision-- > 0)
-		write_to_buffer("0", 1, fdatas);
+		write_format("0", 1, fdatas);
 		//fdatas->out = ft_strconcat(fdatas->out, "0");
 		//
-	write_to_buffer(str, ft_strlen(str), fdatas);
+	write_format(str, ft_strlen(str), fdatas);
 	
 	//fdatas->out = ft_strconcat(fdatas->out, str);
 	while (fdatas->width-- > 0)
-		write_to_buffer(fdatas->fill_char, 1, fdatas);
+		write_format(fdatas->fill_char, 1, fdatas);
 		//fdatas->out = ft_strnconcat(fdatas->out, fdatas->fill_char, 1);
 	
 }
@@ -59,26 +59,26 @@ static void		justify_right(t_fdata *fdatas, char *str)
 		if (str[0] == '-' || (fdatas->flag & (FLAG_MORE | FLAG_SPACE)))
 			print_prefixes(&str, fdatas);
 		while (fdatas->width-- > 0)
-			write_to_buffer(fdatas->fill_char, 1, fdatas);
+			write_format(fdatas->fill_char, 1, fdatas);
 			//fdatas->out = ft_strnconcat(fdatas->out, fdatas->fill_char, 1);
 	}
 	else
 	{
 		while (fdatas->width-- > 0)
-			write_to_buffer(fdatas->fill_char, 1, fdatas);
+			write_format(fdatas->fill_char, 1, fdatas);
 			//fdatas->out = ft_strnconcat(fdatas->out, fdatas->fill_char, 1);
 		if (str[0] == '-' || (fdatas->flag & (FLAG_MORE | FLAG_SPACE)))
 			print_prefixes(&str, fdatas);
 	}
 	while (fdatas->precision-- > 0)
-		write_to_buffer("0", 1, fdatas);
+		write_format("0", 1, fdatas);
 
 		//fdatas->out = ft_strconcat(fdatas->out, "0");
 
 	// whole new logic:
 	// send size of STR + padding (clamped with precision)
 
-	//write_to_buffer(str, ft_strlen(str), fdatas);
+	//write_format(str, ft_strlen(str), fdatas);
 	//fdatas->out = ft_strconcat(fdatas->out, str);
 }
 */
@@ -134,8 +134,8 @@ void			print_formated_digit(t_fdata *fdatas)
 	//fflush(stdout);
 	//int len = ft_strlen(str);
 	//fdatas->width = (fdatas->width > len) ? fdatas->width : len;
-	//write_to_buffer(str, fdatas->width, fdatas);
-	write_to_buffer(str, len, fdatas);
+	//write_format(str, fdatas->width, fdatas);
+	write_format(str, len, fdatas, NULL);
 	// ===========
 
 	ft_strdel(&str);

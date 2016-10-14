@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 14:56:47 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 20:41:02 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,8 +139,6 @@ static void			expand(const char *format, t_fdata *fdatas)
 
 void				parse(const char *format, t_fdata *fdatas)
 {
-	fdatas->stop = NULL;
-
 	// Sur le '%'
 	if (*format == '%')
 		expand(&format[1], fdatas);

@@ -50,6 +50,8 @@ SRC		=	parse \
 			ft_asprintf \
 			ft_sprintf \
 			ft_snprintf \
+			ft_wstrlen \
+			ft_wstrcpy \
 			ft_isdigit \
 			ft_isspace \
 			ft_strdel \
@@ -60,7 +62,6 @@ SRC		=	parse \
 			ft_strjoin \
 			ft_strdup \
 			ft_strpbrk \
-			ft_towstr \
 			ft_toupper \
 			ft_atoi \
 			ft_itoa \

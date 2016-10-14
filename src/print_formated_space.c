@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:32 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 15:00:13 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 21:06:12 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static void		justify(char c, t_fdata *fdatas)
 }
 */
 
+
 /*
 static int		format_error(const char *format, t_fdata *fdatas)
 {
@@ -43,17 +44,20 @@ static int		format_error(const char *format, t_fdata *fdatas)
 }
 */
 
+
 void			print_formated_space(const char *format, t_fdata *fdatas)
 {
-	//char	c;
-
-	//c = '%';
+	/*
+	if (format_error(format, fdatas))
+	{
+		write_format(format, ft_strlen(format), fdatas, NULL);
+		return;
+	}
+	*/
 	(void)format;
-	//if (format_error(format, fdatas))
-	//	c = *format;
 	fdatas->flag ^= (fdatas->flag & FLAG_SPACE) ? FLAG_SPACE : FLAG_NONE;
 	fdatas->flag ^= (fdatas->flag & FLAG_MORE) ? FLAG_MORE : FLAG_NONE;
-	write_to_buffer("%", 1, fdatas);
+	write_format("%", 1, fdatas, NULL);
 	/*
 	if (fdatas->flag & FLAG_LESS)
 		justify(c, fdatas);

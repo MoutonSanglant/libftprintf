@@ -10,13 +10,36 @@ int main(void)
 
 	setlocale(LC_ALL, "fr_FR.UTF-8");
 
+	ft_printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	//printf("%%\n");
+	fflush(stdout);
+
+	return (0);
+
 	str = "a sample string";
 	wstr = L"a sample wide string";
 	unicodestr = L"我是一只猫。";
 
+	ft_printf("Test 1: %s %s\n", "un", "deux");
+	printf("Test 1: %s %s\n", "un", "deux");
+	fflush(stdout);
+	//return (0);
+
+	ft_printf("%p\n", &length);
+	printf("%p\n", &length);
+	fflush(stdout);
+
+	ft_printf("a %% with text\n");
+	printf("b %% with text\n");
+	fflush(stdout);
+
 	ft_printf("%%\n");
 	printf("%%\n");
 	fflush(stdout);
+
+	return (0);
+
 	ft_printf("%s\n", str);
 	printf("%s\n", str);
 	fflush(stdout);

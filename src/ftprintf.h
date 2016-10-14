@@ -87,7 +87,8 @@ typedef struct	s_fdata
 
 void			parse(const char *format, t_fdata *fdatas);
 
-void			write_to_buffer(const char *str, int count, t_fdata *fdatas);
+void			write_to_buffer(const void *str, int count, t_fdata *fdatas);
+void			write_format(const void *str, int count, t_fdata *fdatas, void (*fn)(void *, const void *, size_t));
 
 int				print_formated_char(t_fdata *fdatas);
 int				print_formated_widechar(t_fdata *fdatas);
@@ -102,7 +103,8 @@ void			print_formated_space(const char *format, t_fdata *fdatas);
 
 int				ft_putwchar(wchar_t *unicode_point);
 //char			*ft_towstr(wchar_t *unicode_point, int *len);
-int				ft_towstr(wchar_t *unicode_point, char **len);
+int				ft_wstrlen(wchar_t *wstr);
+int				ft_wstrcpy(char *dst, wchar_t *src, int count);
 
 char			*ft_imaxtoa(intmax_t n);
 int				ft_isprint(int c);

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:24 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 16:28:25 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 21:18:30 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,60 +94,32 @@ static void		convert(unsigned char *h, char *str, int len)
 }
 
 
-static int			wstrlen(wchar_t *wstr)
-{
-	wchar_t	unicode_point;
-	int		bcount;
-	int		i;
-
-	i = 0;
-	bcount = 0;
-	while ((unicode_point = wstr[i]))
-	{
-		if (unicode_point <= MASK7)
-			bcount += 1;
-		else if (unicode_point <= MASK11)
-			bcount += 2;
-		else if (unicode_point <= MASK16)
-			bcount += 3;
-		else if (unicode_point <= MASK21)
-			bcount += 4;
-		else if (unicode_point <= MASK26)
-			bcount += 5;
-		else
-			bcount += 6;
-		i++;
-	}
-	return (bcount);
-}
 
 #include <stdio.h>
 
-int			ft_towstr(wchar_t *unicode_point, char **str)
+int			ft_wstrcpy(char *dst, wchar_t *src, int count)
 {
-	//char	*str;
 	wchar_t	c;
-	int		length;
 	int		wchar_size;
-	char	*str_ptr;
 	char	*end_ptr;
 
-	length = wstrlen(unicode_point);
-	*str = (char *)malloc(length + 1);
-	str_ptr = *str;
-	end_ptr = &(*str)[length];
+	end_ptr = &dst[count];
 
-	printf("[dump] widestring length: %i\n", length);
-	fflush(stdout);
+	//printf("[dump] widestring length: %i\n", count);
+	//fflush(stdout);
 
-	while (str_ptr < end_ptr)
+	while (dst < end_ptr)
 	{
-		c = *unicode_point;
-		unicode_point++;
+		c = *src;
+
+		//printf("[dump] writting unicode point '%C' at address: %p\n", c, dst);
+		//fflush(stdout);
+
+		src++;
 		if (c <= MASK7)
 		{
-			*str_ptr = c;
-			str_ptr++;
+			*dst = c;
+			dst++;
 			continue ;
 		}
 		if (c <= MASK11)
@@ -161,12 +133,9 @@ int			ft_towstr(wchar_t *unicode_point, char **str)
 		else
 			wchar_size = 6;
 
-		printf("[dump] writting unicode point at address: %p\n", str_ptr);
-		fflush(stdout);
-
-		convert((unsigned char *)&c, str_ptr, wchar_size);
-		str_ptr += wchar_size;
+		convert((unsigned char *)&c, dst, wchar_size);
+		dst += wchar_size;
 	}
-	(*str)[length] = '\0';
-	return (length);
+	//*dst = '\0';
+	return (count);
 }

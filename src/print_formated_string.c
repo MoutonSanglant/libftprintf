@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:41 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 16:45:45 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 21:24:18 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int		justify_long_string(wchar_t *wstr, t_fdata *fdatas)
 		//{
 			str = ft_towstr(&wstr[r_bytes], &len);
 			//fdatas->out = ft_strconcat(fdatas->out, str);
-			write_to_buffer(str, len, fdatas);
+			write_format(str, len, fdatas);
 			ft_strdel(&str);
 		//}
 	}
@@ -95,33 +95,41 @@ static void		print_formated_long_string(t_fdata *fdatas, wchar_t *wstr)
 }
 */
 
+/*
+static void	print_null(void *dst, const void *src, size_t n)
+{
+	char	*str;
+
+	str = dst;
+	if (fdatas->precision >= 6)
+	{
+		*str++ = '(';
+		*str++ = 'n';
+		*str++ = 'u';
+		*str++ = 'l';
+		*str++ = 'l';
+		*str++ = ')';
+	}
+}*/
 
 static void	print_null(t_fdata *fdatas)
 {
-	char		*str;
+	//fdatas->precision = (fdatas->precision < 0) ? 7 : fdatas->precision;
+	//write_format("(null)", 6, fdatas, &print_null);
+	write_format("(null)", 6, fdatas, NULL);
+}
 
-	fdatas->precision = (fdatas->precision < 0) ? 7 : fdatas->precision;
-	if (fdatas->precision < 6)
-		str = ft_strdup(" ");
-	else
-		str = ft_strdup("(null)");
-	write_to_buffer(str, ft_strlen(str), fdatas);
-	ft_strdel(&str);
+static void	conversion(void *dst, const void *src, size_t n)
+{
+	ft_wstrcpy((char *)dst, (wchar_t *)src, n);
 }
 
 static void	print_wide(t_fdata *fdatas)
 {
 	wchar_t		*wstr;
-	char		*str;
-	int			len;
 
 	if ((wstr = (wchar_t *)va_arg(*fdatas->ap, wchar_t *)))
-	{
-		len = ft_towstr(wstr, &str);
-		write_to_buffer(str, len, fdatas);
-		// ICI
-		//ft_strdel(&str);
-	}
+		write_format(wstr, ft_wstrlen(wstr), fdatas, &conversion);
 	else
 		print_null(fdatas);
 
@@ -132,7 +140,7 @@ static void	print_ascii(t_fdata *fdatas)
 	char		*str;
 
 	if ((str = va_arg(*fdatas->ap, char *)))
-		write_to_buffer(str, ft_strlen(str), fdatas);
+		write_format(str, ft_strlen(str), fdatas, NULL);
 	else
 		print_null(fdatas);
 }
@@ -140,7 +148,7 @@ static void	print_ascii(t_fdata *fdatas)
 static void	print_constant(t_fdata *fdatas, char *str)
 {
 	if (str)
-		write_to_buffer(str, ft_strlen(str), fdatas);
+		write_format(str, ft_strlen(str), fdatas, NULL);
 	else
 		print_null(fdatas);
 }
