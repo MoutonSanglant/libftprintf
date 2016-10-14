@@ -1,3 +1,4 @@
+#include <locale.h>
 #include "src/ftprintf.h"
 
 int main(void)
@@ -5,9 +6,43 @@ int main(void)
 	char	*str;
 	int		length;
 
-	ft_printf("sizeof(t_fdata): %i==abc==\n", (int)sizeof(t_fdata));
+	setlocale(LC_ALL, "fr_FR.UTF-8");
 
-	length = asprintf(&str, "sizeof(t_fdata): %i\n", (int)sizeof(t_fdata));
-	printf("\n==============\nlength of string: %i\n", length);
+	ft_printf("%c", '@');
+	printf("\n%c\n", '@');
+	fflush(stdout);
+	ft_printf("%x", 0xf347f);
+	printf("\n%x\n", 0xf347f);
+	fflush(stdout);
+	ft_printf("%o", 0xf347f);
+	printf("\n%o\n", 0xf347f);
+	fflush(stdout);
+	ft_printf("%u", 0xf347f);
+	printf("\n%u\n", 0xf347f);
+	fflush(stdout);
+	ft_printf("%p", &length);
+	printf("\n%p\n", &length);
+	fflush(stdout);
+	ft_printf("%%"); // error
+	printf("\n%%\n");
+	fflush(stdout);
+	ft_printf("%s", "hello world !"); // error
+	printf("\n%s\n", "hello world !");
+	fflush(stdout);
+	//test_S("{%30S}", L"我是一只猫。");
+	ft_printf("%C", L'我');
+	printf("\n%C\n", L'我');
+	fflush(stdout);
+	ft_printf("Petit test: %i%o%x%s%u ET %C", 0xf347f, 0xf347f, 0xf347f, "0xf347f", 0xf347f, L'我');
+	printf("\nPetit test: %i%o%x%s%u ET %C\n", 0xf347f, 0xf347f, 0xf347f, "0xf347f", 0xf347f, L'我');
+	fflush(stdout);
+	//ft_printf("%+8.4lli", (long long int)sizeof(t_fdata));
+	//ft_printf("sizeof(t_fdata): %-+.4lli==abc==\n", (long long int)sizeof(t_fdata));
+	//printf("\n%+8.4lli\n", (long long int)sizeof(t_fdata));
+	//fflush(stdout);
+	//ft_printf("sizeof(t_fdata): %lli==abc==\n", (int)sizeof(t_fdata));
+
+	//length = asprintf(&str, "sizeof(t_fdata): %i\n", (int)sizeof(t_fdata));
+	//printf("\n==============\nlength of string: %i\n", length);
 	return (0);
 }

@@ -80,7 +80,8 @@ typedef struct	s_fdata
 	int			width;
 	int			precision;
 	int			bcount;
-	int			expand;
+	//int			expand;
+	char		*stop;
 	int			idx;
 }				t_fdata;
 

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:01 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/01 21:45:06 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 05:35:39 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		ft_toupper(int c)
 {
-	if (ft_islower(c))
+	if (c >= 'a' && c <= 'z')
 		return (c - 'a' + 'A');
 	return (c);
 }

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 21:41:26 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 03:19:02 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void			expand(const char *format, t_fdata *fdatas)
 {
 	const char	*spec;
 
-	fdatas->expand = 1;
+	fdatas->stop = ft_strpbrk(format, "sSpdDioOuUxXcC%");
 	//parse(format, fdatas);
 	if (!(spec = ft_strpbrk(format, "sSpdDioOuUxXcC%")))
 		spec = get_format_datas(format, format + ft_strlen(format), fdatas);
@@ -137,41 +137,13 @@ static void			expand(const char *format, t_fdata *fdatas)
 	return;
 }
 
-#include <stdio.h>
-#include <string.h>
-// ILEGAL: strndup
-
 void				parse(const char *format, t_fdata *fdatas)
 {
-	fdatas->expand = 0;
-
-	//int			padding;
-	//int			spec_dist;
-
-	// Distance jusau'au %'
-	//spec_dist = spec_char_ptr - format;
+	fdatas->stop = NULL;
 
 	// Sur le '%'
 	if (*format == '%')
-	{
-		printf("found %%\n");
-		fflush(stdout);
-		//padding = fdatas->bcount;
-		// copy the expanded result into output
 		expand(&format[1], fdatas);
-
-		/*
-		padding = fdatas->bcount - padding;
-		if (padding <= 0)
-			return (-1); // experimental
-		if (parse(&format[padding], fdatas))
-		*/
-	}
 	else
-	{
-		//fdatas->bcount += spec_dist;
-		//parse(&format[spec_dist], fdatas);
-		//write_to_buffer(format, spec_dist, fdatas);
 		write_to_buffer(format, fdatas->bcount, fdatas);
-	}
 }

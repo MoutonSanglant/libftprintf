@@ -6,12 +6,13 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:48 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 19:46:03 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 05:16:11 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
+/*
 static void		justify_left(t_fdata *fdatas, char *str)
 {
 	return;
@@ -31,6 +32,7 @@ static void		justify_right(t_fdata *fdatas, char *str)
 		fdatas->out = ft_strconcat(fdatas->out, "0");
 	fdatas->out = ft_strconcat(fdatas->out, str);
 }
+*/
 
 static char		*str_from_arg(t_fdata *fdatas)
 {
@@ -62,6 +64,8 @@ void			print_formated_unsigned(t_fdata *fdatas)
 	if (fdatas->precision >= 0)
 		fdatas->fill_char = " ";
 	len = ft_strlen(str);
+	write_to_buffer(str, ft_strlen(str), fdatas);
+	/*
 	fdatas->precision = fdatas->precision - len;
 	fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;
 	fdatas->width = fdatas->width - fdatas->precision - len;
@@ -69,5 +73,6 @@ void			print_formated_unsigned(t_fdata *fdatas)
 		justify_left(fdatas, str);
 	else
 		justify_right(fdatas, str);
+		*/
 	ft_strdel(&str);
 }

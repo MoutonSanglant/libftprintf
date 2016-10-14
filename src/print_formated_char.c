@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:50 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 19:44:29 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 05:02:59 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 **	(*c == 0)
 */
 
+/*
 static void		justify(wint_t *c, t_fdata *fdatas)
 {
 	return;
@@ -25,6 +26,7 @@ static void		justify(wint_t *c, t_fdata *fdatas)
 	else
 		fdatas->out = ft_strnconcat(fdatas->out, (char *)c, 1);
 }
+*/
 
 int				print_formated_char(t_fdata *fdatas)
 {
@@ -39,8 +41,12 @@ int				print_formated_char(t_fdata *fdatas)
 			return (-1);
 		return (0);
 	}
+
 	fdatas->flag ^= (fdatas->flag & FLAG_SPACE) ? FLAG_SPACE : FLAG_NONE;
 	fdatas->flag ^= (fdatas->flag & FLAG_MORE) ? FLAG_MORE : FLAG_NONE;
+
+	write_to_buffer((char *)&c, 1, fdatas);
+	/*
 	if (fdatas->flag & FLAG_LESS)
 		justify(&c, fdatas);
 	fdatas->width--;
@@ -52,5 +58,6 @@ int				print_formated_char(t_fdata *fdatas)
 	}
 	if (!(fdatas->flag & FLAG_LESS))
 		justify(&c, fdatas);
+	*/
 	return (0);
 }

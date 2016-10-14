@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:54 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 19:46:18 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 05:24:22 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 **	(*c == 0)
 */
 
+/*
 static void		justify(wint_t *c, t_fdata *fdatas)
 {
 	return;
@@ -34,7 +35,9 @@ static void		justify(wint_t *c, t_fdata *fdatas)
 	else
 		fdatas->out = ft_strnconcat(fdatas->out, (char *)c, 1);
 }
+*/
 
+/*
 static int		unicode_length(t_fdata *fdatas, wint_t c)
 {
 	if (c <= MASK7)
@@ -54,16 +57,29 @@ static int		unicode_length(t_fdata *fdatas, wint_t c)
 		return (5);
 	return (0);
 }
+*/
 
 int				print_formated_widechar(t_fdata *fdatas)
 {
 	wint_t	c;
-	int		unicode_len;
+	//int		unicode_len;
+	char	*str;
+	int		ret; //unused
 
 	c = (wint_t)va_arg(*fdatas->ap, wint_t);
-	unicode_len = unicode_length(fdatas, c);
-	if (unicode_len < 0)
-		return (-1);
+	//unicode_len = unicode_length(fdatas, c);
+	//if (unicode_len < 0)
+	//	return (-1);
+
+	// experimental
+	str = ft_towstr((wchar_t *)&c, &ret);
+	if (ret < 0)
+		return (-1); // not sure !!
+	//write_to_buffer(str, unicode_len, fdatas);
+	write_to_buffer(str, ret, fdatas);
+	ft_strdel(&str);
+	//==============
+	/*
 	fdatas->width -= (unicode_len + 1);
 	fdatas->flag ^= (fdatas->flag & FLAG_SPACE) ? FLAG_SPACE : FLAG_NONE;
 	fdatas->flag ^= (fdatas->flag & FLAG_MORE) ? FLAG_MORE : FLAG_NONE;
@@ -77,5 +93,6 @@ int				print_formated_widechar(t_fdata *fdatas)
 	}
 	if (!(fdatas->flag & FLAG_LESS))
 		justify(&c, fdatas);
+		*/
 	return (0);
 }

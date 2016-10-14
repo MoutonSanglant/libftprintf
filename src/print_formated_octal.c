@@ -6,12 +6,13 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:17 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 19:45:13 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 05:06:37 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
+/*
 static void		justify(char *str, t_fdata *fdatas)
 {
 	return;
@@ -19,6 +20,7 @@ static void		justify(char *str, t_fdata *fdatas)
 		fdatas->out = ft_strconcat(fdatas->out, "0");
 	fdatas->out = ft_strconcat(fdatas->out, str);
 }
+*/
 
 static char		*str_from_arg(t_fdata *fdatas)
 {
@@ -39,6 +41,7 @@ static char		*str_from_arg(t_fdata *fdatas)
 	return (NULL);
 }
 
+/*
 static void		printf_octal_string(t_fdata *fdatas, char *str)
 {
 	return;
@@ -68,6 +71,7 @@ static void		printf_octal_string(t_fdata *fdatas, char *str)
 		justify(str, fdatas);
 	}
 }
+*/
 
 void			print_formated_octal(t_fdata *fdatas)
 {
@@ -78,12 +82,15 @@ void			print_formated_octal(t_fdata *fdatas)
 	if (str[0] == '0'
 			&& (fdatas->precision == 0 || fdatas->flag & FLAG_NUMBERSIGN))
 		str[0] = '\0';
-	if (fdatas->flag & FLAG_NUMBERSIGN)
-		fdatas->precision--;
+	//if (fdatas->flag & FLAG_NUMBERSIGN)
+	//	fdatas->precision--;
 	len = ft_strlen(str);
+	write_to_buffer(str, len, fdatas);
+	/*
 	fdatas->precision = fdatas->precision - len;
 	fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;
 	fdatas->width = fdatas->width - fdatas->precision - len;
 	printf_octal_string(fdatas, str);
+	*/
 	ft_strdel(&str);
 }

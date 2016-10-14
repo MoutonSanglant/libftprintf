@@ -6,12 +6,13 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:59 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 21:32:05 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 03:49:01 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
+/*
 static void		print_prefixes(char **str, t_fdata *fdatas)
 {
 	if ((*str)[0] == '-')
@@ -28,21 +29,29 @@ static void		print_prefixes(char **str, t_fdata *fdatas)
 		write_to_buffer(" ", 1, fdatas);
 		//fdatas->out = ft_strconcat(fdatas->out, " ");
 }
+*/
 
+/*
 static void		justify_left(t_fdata *fdatas, char *str)
 {
+	
 	if (str[0] == '-' || (fdatas->flag & (FLAG_MORE | FLAG_SPACE)))
 		print_prefixes(&str, fdatas);
 	while (fdatas->precision-- > 0)
 		write_to_buffer("0", 1, fdatas);
 		//fdatas->out = ft_strconcat(fdatas->out, "0");
+		//
 	write_to_buffer(str, ft_strlen(str), fdatas);
+	
 	//fdatas->out = ft_strconcat(fdatas->out, str);
 	while (fdatas->width-- > 0)
 		write_to_buffer(fdatas->fill_char, 1, fdatas);
 		//fdatas->out = ft_strnconcat(fdatas->out, fdatas->fill_char, 1);
+	
 }
+*/
 
+/*
 static void		justify_right(t_fdata *fdatas, char *str)
 {
 	if (fdatas->flag & FLAG_ZERO)
@@ -63,13 +72,16 @@ static void		justify_right(t_fdata *fdatas, char *str)
 	}
 	while (fdatas->precision-- > 0)
 		write_to_buffer("0", 1, fdatas);
+
 		//fdatas->out = ft_strconcat(fdatas->out, "0");
 
 	// whole new logic:
 	// send size of STR + padding (clamped with precision)
-	write_to_buffer(str, ft_strlen(str), fdatas);
+
+	//write_to_buffer(str, ft_strlen(str), fdatas);
 	//fdatas->out = ft_strconcat(fdatas->out, str);
 }
+*/
 
 static char		*str_from_arg(t_fdata *fdatas)
 {
@@ -100,21 +112,31 @@ void			print_formated_digit(t_fdata *fdatas)
 		str[0] = '\0';
 	if (str[0] == '-')
 	{
-		if (fdatas->precision >= 0)
-			fdatas->precision++;
+		//if (fdatas->precision >= 0)
+		//	fdatas->precision++;
 		fdatas->flag ^= (fdatas->flag & FLAG_MORE) ? FLAG_MORE : FLAG_NONE;
 	}
-	if (fdatas->flag & (FLAG_MORE | FLAG_SPACE))
-		fdatas->width--;
-	if (fdatas->precision >= 0)
-		fdatas->fill_char = " ";
+	//if (fdatas->flag & (FLAG_MORE | FLAG_SPACE))
+	//	fdatas->width--;
+	//if (fdatas->precision >= 0)
+	//	fdatas->fill_char = " ";
 	len = ft_strlen(str);
-	fdatas->precision = fdatas->precision - len;
-	fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;
-	fdatas->width = fdatas->width - fdatas->precision - len;
-	if (fdatas->flag & FLAG_LESS)
-		justify_left(fdatas, str);
-	else
-		justify_right(fdatas, str);
+	//fdatas->precision = fdatas->precision - len;
+	//fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;
+	//fdatas->width = fdatas->width - fdatas->precision - len;
+	//if (fdatas->flag & FLAG_LESS)
+	//	justify_left(fdatas, str);
+	//else
+	//	justify_right(fdatas, str);
+
+	// NEW:
+	//printf("width: %i\n", fdatas->width);
+	//fflush(stdout);
+	//int len = ft_strlen(str);
+	//fdatas->width = (fdatas->width > len) ? fdatas->width : len;
+	//write_to_buffer(str, fdatas->width, fdatas);
+	write_to_buffer(str, len, fdatas);
+	// ===========
+
 	ft_strdel(&str);
 }

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 18:08:15 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 05:09:06 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void			print_formated_pointer(t_fdata *fdatas)
 		fdatas->width--;
 	}
 	join = ft_strjoin("0x", s);
-	print_formated_string(fdatas, join);
+	write_to_buffer(join, ft_strlen(join), fdatas);
+	//print_formated_string(fdatas, join);
 	ft_strdel(&s);
 	ft_strdel(&join);
 }

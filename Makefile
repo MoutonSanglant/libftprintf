@@ -50,24 +50,16 @@ SRC		=	parse \
 			ft_asprintf \
 			ft_sprintf \
 			ft_snprintf \
-			ft_isprint \
-			ft_islower \
 			ft_isdigit \
 			ft_isspace \
 			ft_strdel \
 			ft_strlen \
 			ft_strncpy \
 			ft_strnew \
-			ft_strnconcat \
-			ft_strconcat \
 			ft_strchr \
 			ft_strjoin \
-			ft_strnjoin \
 			ft_strdup \
 			ft_strpbrk \
-			ft_putstr \
-			ft_putstr_fd \
-			ft_putwchar \
 			ft_towstr \
 			ft_toupper \
 			ft_atoi \

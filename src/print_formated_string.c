@@ -6,12 +6,13 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:41 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 19:46:40 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 05:15:15 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
+/*
 static void		print(t_fdata *fdatas, char *str)
 {
 	return;
@@ -31,6 +32,7 @@ static void		print(t_fdata *fdatas, char *str)
 	if (!(fdatas->flag & FLAG_LESS))
 		fdatas->out = ft_strnconcat(fdatas->out, str, fdatas->precision);
 }
+*/
 
 static int		justify_long_string(wchar_t *wstr, t_fdata *fdatas, int dry)
 {
@@ -105,11 +107,13 @@ void			print_formated_string(t_fdata *fdatas, char *s)
 			str = ft_strdup(" ");
 		else
 			str = ft_strdup("(null)");
-		print(fdatas, str);
+		write_to_buffer(str, ft_strlen(str), fdatas);
+		//print(fdatas, str);
 		ft_strdel(&str);
 	}
 	else if (str)
-		print(fdatas, str);
+		write_to_buffer(str, ft_strlen(str), fdatas);
+		//print(fdatas, str);
 	else
-		print_formated_long_string(fdatas, wstr);
+		print_formated_long_string(fdatas, wstr); // TODO not handled yet
 }
