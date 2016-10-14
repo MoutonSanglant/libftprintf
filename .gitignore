@@ -19,7 +19,6 @@ vgcore.*
 
 ### Libraries ###
 *.a
-!/lib/*
 
 
 ### Temporary files ###
