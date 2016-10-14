@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 19:02:39 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 05:04:34 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 15:59:39 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,13 @@ void	write_to_buffer(const char *src, int wcount, t_fdata *fdatas)
 		// increment bcount with remaining caracters
 		fdatas->bcount += ft_strlen(src);
 
-		//printf("[dump] src: %s\n", src);
+		//printf("[dump] bcount: %i\n", fdatas->bcount);
 		//fflush(stdout);
 
 		fdatas->out = (char *)malloc(fdatas->bcount + 1);
 		fdatas->out[fdatas->bcount] = '\0';
 
-		//printf(">>>>>> malloc of size %i <<<<<<<<<\n", fdatas->bcount);
+		//printf(">>>>>> malloc of size %i <<<<<<<<<\n", fdatas->bcount + 1);
 		//fflush(stdout);
 	}
 	else
@@ -113,6 +113,8 @@ void	write_to_buffer(const char *src, int wcount, t_fdata *fdatas)
 			// increment index & bcount
 			fdatas->idx += wcount;
 			fdatas->bcount += wcount;
+
+			//printf("[dump]\nstr: %s\n", src);
 
 			/*
 			printf("[dump] bcount: %i\n", fdatas->bcount);

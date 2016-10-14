@@ -4,10 +4,41 @@
 int main(void)
 {
 	char	*str;
+	wchar_t	*wstr;
+	wchar_t	*unicodestr;
 	int		length;
 
 	setlocale(LC_ALL, "fr_FR.UTF-8");
 
+	str = "a sample string";
+	wstr = L"a sample wide string";
+	unicodestr = L"我是一只猫。";
+
+	ft_printf("%%\n");
+	printf("%%\n");
+	fflush(stdout);
+	ft_printf("%s\n", str);
+	printf("%s\n", str);
+	fflush(stdout);
+	ft_printf("%S\n", wstr);
+	printf("%S\n", wstr);
+	fflush(stdout);
+	ft_printf("%S\n", unicodestr);
+	printf("\n%S\n", unicodestr);
+	fflush(stdout);
+	unicodestr = L"unicode string 我是一只猫。";
+	ft_printf("%S\n", unicodestr);
+	printf("\n%S\n", unicodestr);
+	fflush(stdout);
+	unicodestr = L"我是一只猫。 ok !";
+	ft_printf("%S\n", unicodestr);
+	printf("\n%S\n", unicodestr);
+	fflush(stdout);
+	unicodestr = L"unicode string 我是一只猫。 ok !";
+	ft_printf("%S\n", unicodestr);
+	printf("\n%S\n", unicodestr);
+	fflush(stdout);
+	return (0);
 	ft_printf("%c", '@');
 	printf("\n%c\n", '@');
 	fflush(stdout);
@@ -22,9 +53,6 @@ int main(void)
 	fflush(stdout);
 	ft_printf("%p", &length);
 	printf("\n%p\n", &length);
-	fflush(stdout);
-	ft_printf("%%"); // error
-	printf("\n%%\n");
 	fflush(stdout);
 	ft_printf("%s", "hello world !"); // error
 	printf("\n%s\n", "hello world !");

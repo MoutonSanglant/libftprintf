@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:41 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 05:15:15 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 16:45:45 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ static void		print(t_fdata *fdatas, char *str)
 }
 */
 
-static int		justify_long_string(wchar_t *wstr, t_fdata *fdatas, int dry)
+
+/*
+//static int		justify_long_string(wchar_t *wstr, t_fdata *fdatas, int dry)
+static int		justify_long_string(wchar_t *wstr, t_fdata *fdatas)
 {
 	int		r_bytes;
 	int		w_bytes;
@@ -58,18 +61,22 @@ static int		justify_long_string(wchar_t *wstr, t_fdata *fdatas, int dry)
 		else if (wstr[r_bytes] <= MASK26)
 			n = 5;
 		w_bytes += n;
-		if (w_bytes > fdatas->precision)
-			return (w_bytes - n);
-		else if (!dry)
-		{
+		//if (w_bytes > fdatas->precision)
+		//	return (w_bytes - n);
+		//else if (!dry)
+		//{
 			str = ft_towstr(&wstr[r_bytes], &len);
-			fdatas->out = ft_strconcat(fdatas->out, str);
+			//fdatas->out = ft_strconcat(fdatas->out, str);
+			write_to_buffer(str, len, fdatas);
 			ft_strdel(&str);
-		}
+		//}
 	}
 	return (w_bytes);
 }
+*/
 
+
+/*
 static void		print_formated_long_string(t_fdata *fdatas, wchar_t *wstr)
 {
 	return;
@@ -86,34 +93,64 @@ static void		print_formated_long_string(t_fdata *fdatas, wchar_t *wstr)
 	if (!(fdatas->flag & FLAG_LESS))
 		justify_long_string(wstr, fdatas, 0);
 }
+*/
 
-void			print_formated_string(t_fdata *fdatas, char *s)
+
+static void	print_null(t_fdata *fdatas)
+{
+	char		*str;
+
+	fdatas->precision = (fdatas->precision < 0) ? 7 : fdatas->precision;
+	if (fdatas->precision < 6)
+		str = ft_strdup(" ");
+	else
+		str = ft_strdup("(null)");
+	write_to_buffer(str, ft_strlen(str), fdatas);
+	ft_strdel(&str);
+}
+
+static void	print_wide(t_fdata *fdatas)
 {
 	wchar_t		*wstr;
 	char		*str;
+	int			len;
 
-	str = NULL;
-	wstr = NULL;
-	if (s != NULL)
-		str = s;
-	else if (fdatas->length == LENGTH_L)
-		wstr = (wchar_t *)va_arg(*fdatas->ap, wchar_t *);
-	else
-		str = va_arg(*fdatas->ap, char *);
-	if (!str && !wstr)
+	if ((wstr = (wchar_t *)va_arg(*fdatas->ap, wchar_t *)))
 	{
-		fdatas->precision = (fdatas->precision < 0) ? 7 : fdatas->precision;
-		if (fdatas->precision < 6)
-			str = ft_strdup(" ");
-		else
-			str = ft_strdup("(null)");
-		write_to_buffer(str, ft_strlen(str), fdatas);
-		//print(fdatas, str);
-		ft_strdel(&str);
+		len = ft_towstr(wstr, &str);
+		write_to_buffer(str, len, fdatas);
+		// ICI
+		//ft_strdel(&str);
 	}
-	else if (str)
-		write_to_buffer(str, ft_strlen(str), fdatas);
-		//print(fdatas, str);
 	else
-		print_formated_long_string(fdatas, wstr); // TODO not handled yet
+		print_null(fdatas);
+
+}
+
+static void	print_ascii(t_fdata *fdatas)
+{
+	char		*str;
+
+	if ((str = va_arg(*fdatas->ap, char *)))
+		write_to_buffer(str, ft_strlen(str), fdatas);
+	else
+		print_null(fdatas);
+}
+
+static void	print_constant(t_fdata *fdatas, char *str)
+{
+	if (str)
+		write_to_buffer(str, ft_strlen(str), fdatas);
+	else
+		print_null(fdatas);
+}
+void			print_formated_string(t_fdata *fdatas, char *s)
+{
+
+	if (s != NULL)
+		print_constant(fdatas, s);
+	else if (fdatas->length == LENGTH_L)
+		print_wide(fdatas);
+	else
+		print_ascii(fdatas);
 }

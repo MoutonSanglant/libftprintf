@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:54 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 05:24:22 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 15:53:26 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ int				print_formated_widechar(t_fdata *fdatas)
 	//	return (-1);
 
 	// experimental
-	str = ft_towstr((wchar_t *)&c, &ret);
+	//str = ft_towstr((wchar_t *)&c, &ret);
+	ret = ft_towstr((wchar_t *)&c, &str);
 	if (ret < 0)
 		return (-1); // not sure !!
 	//write_to_buffer(str, unicode_len, fdatas);

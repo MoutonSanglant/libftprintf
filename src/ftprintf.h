@@ -101,7 +101,8 @@ void			print_formated_space(const char *format, t_fdata *fdatas);
 
 
 int				ft_putwchar(wchar_t *unicode_point);
-char			*ft_towstr(wchar_t *unicode_point, int *len);
+//char			*ft_towstr(wchar_t *unicode_point, int *len);
+int				ft_towstr(wchar_t *unicode_point, char **len);
 
 char			*ft_imaxtoa(intmax_t n);
 int				ft_isprint(int c);

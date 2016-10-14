@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:24 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/03 07:36:31 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/14 16:28:25 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,117 +54,119 @@
 **	mask17 = 0b00000000000000010000000000000000; <=> (1 << 16)
 */
 
-static void		convert(unsigned char *h, char **str, int len)
+//static void		convert(unsigned char *h, char **str, int len)
+static void		convert(unsigned char *h, char *str, int len)
 {
 	int		i;
 
 	i = 0;
 	if (len <= 2)
-		(*str)[i++] =
+		str[i++] =
 			((((*h & 0b11000000) >> 6)
-			  | ((*(h + 1) << 2)
+				| ((*(h + 1) << 2)
 						& 0b00011111)) | 0b11000000);
 	else
 	{
 		if (len <= 3)
-			(*str)[i++] = (((*(h + 1) & 0b11110000) >> 4) | 0b11100000);
+			str[i++] = (((*(h + 1) & 0b11110000) >> 4) | 0b11100000);
 		else
 		{
 			if (len <= 4)
-				(*str)[i++] = (((*(h + 2) & 0b00011100) >> 2) | 0b11110000);
+				str[i++] = (((*(h + 2) & 0b00011100) >> 2) | 0b11110000);
 			else
 			{
 				if (len <= 5)
-					(*str)[i++] = (((*(h + 3) & 0b00000011)) | 0b11111000);
+					str[i++] = (((*(h + 3) & 0b00000011)) | 0b11111000);
 				else
 				{
-					(*str)[i++] = (((*(h + 3) & 0b01000000)) | 0b11111100);
-					(*str)[i++] = (((*(h + 3) & 0b00111111)) | 0b10000000);
+					str[i++] = (((*(h + 3) & 0b01000000)) | 0b11111100);
+					str[i++] = (((*(h + 3) & 0b00111111)) | 0b10000000);
 				}
-				(*str)[i++] = (((*(h + 2) & 0b11111100) >> 2) | 0b10000000);
+				str[i++] = (((*(h + 2) & 0b11111100) >> 2) | 0b10000000);
 			}
-			(*str)[i++] = ((((*(h + 1) & 0b11110000) >> 4) | ((*(h + 2) << 4)
+			str[i++] = ((((*(h + 1) & 0b11110000) >> 4) | ((*(h + 2) << 4)
 							& 0b00111111)) | 0b10000000);
 		}
-		(*str)[i++] = ((((*h & 0b11000000) >> 6) | ((*(h + 1) << 2)
+		str[i++] = ((((*h & 0b11000000) >> 6) | ((*(h + 1) << 2)
 							& 0b00111111)) | 0b10000000);
 	}
-	(*str)[i++] = ((*h & 0b00111111) | 0b10000000);
+	str[i++] = ((*h & 0b00111111) | 0b10000000);
 }
 
-#ifdef DEBUG
 
-static char		*debug_ft_towstr(wchar_t *unicode_point, int *len)
+static int			wstrlen(wchar_t *wstr)
 {
-	char	*str;
+	wchar_t	unicode_point;
+	int		bcount;
+	int		i;
+
+	i = 0;
+	bcount = 0;
+	while ((unicode_point = wstr[i]))
+	{
+		if (unicode_point <= MASK7)
+			bcount += 1;
+		else if (unicode_point <= MASK11)
+			bcount += 2;
+		else if (unicode_point <= MASK16)
+			bcount += 3;
+		else if (unicode_point <= MASK21)
+			bcount += 4;
+		else if (unicode_point <= MASK26)
+			bcount += 5;
+		else
+			bcount += 6;
+		i++;
+	}
+	return (bcount);
+}
+
+#include <stdio.h>
+
+int			ft_towstr(wchar_t *unicode_point, char **str)
+{
+	//char	*str;
 	wchar_t	c;
+	int		length;
+	int		wchar_size;
+	char	*str_ptr;
+	char	*end_ptr;
 
-	*len = 0;
-	c = *unicode_point;
-	if (c <= MASK7)
+	length = wstrlen(unicode_point);
+	*str = (char *)malloc(length + 1);
+	str_ptr = *str;
+	end_ptr = &(*str)[length];
+
+	printf("[dump] widestring length: %i\n", length);
+	fflush(stdout);
+
+	while (str_ptr < end_ptr)
 	{
-		str = ft_strnew(1);
-		str[0] = *((unsigned char *)unicode_point);
-		*len = 1;
-	}
-	else
-	{
-		*len = 6;
+		c = *unicode_point;
+		unicode_point++;
+		if (c <= MASK7)
+		{
+			*str_ptr = c;
+			str_ptr++;
+			continue ;
+		}
 		if (c <= MASK11)
-			*len = 2;
+			wchar_size = 2;
 		else if (c <= MASK16)
-			*len = 3;
+			wchar_size = 3;
 		else if (c <= MASK21)
-			*len = 4;
+			wchar_size = 4;
 		else if (c <= MASK26)
-			*len = 5;
-		str = ft_strnew(*len);
-		convert((unsigned char *)unicode_point, &str, *len);
+			wchar_size = 5;
+		else
+			wchar_size = 6;
+
+		printf("[dump] writting unicode point at address: %p\n", str_ptr);
+		fflush(stdout);
+
+		convert((unsigned char *)&c, str_ptr, wchar_size);
+		str_ptr += wchar_size;
 	}
-	str[*len] = '\0';
-	return (str);
+	(*str)[length] = '\0';
+	return (length);
 }
-
-char			*ft_towstr(wchar_t *unicode_point, int *len)
-{
-	if (!unicode_point)
-	{
-		ft_printf("ft_towstr: param error");
-		return (0);
-	}
-	return (debug_ft_towstr(unicode_point, len));
-}
-
-#else
-
-char			*ft_towstr(wchar_t *unicode_point, int *len)
-{
-	char	*str;
-	wchar_t	c;
-
-	*len = 0;
-	c = *unicode_point;
-	if (c <= MASK7)
-	{
-		str = ft_strnew(1);
-		str[0] = *((unsigned char *)unicode_point);
-		*len = 1;
-	}
-	else
-	{
-		*len = 6;
-		if (c <= MASK11)
-			*len = 2;
-		else if (c <= MASK16)
-			*len = 3;
-		else if (c <= MASK21)
-			*len = 4;
-		else if (c <= MASK26)
-			*len = 5;
-		str = ft_strnew(*len);
-		convert((unsigned char *)unicode_point, &str, *len);
-	}
-	str[*len] = '\0';
-	return (str);
-}
-#endif
