@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:54 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 22:38:05 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 23:18:16 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int				print_formated_widechar(t_fdata *fdatas)
 {
 	wint_t	c;
 
+	fdatas->precision = -1;
+	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE);
 	c = (wint_t)va_arg(*fdatas->ap, wint_t);
 	write_format(&c, wintlen(c), fdatas, &conversion);
 

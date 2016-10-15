@@ -104,10 +104,11 @@ void			print_formated_string(t_fdata *fdatas, char *s);
 void			print_formated_pointer(t_fdata *fdatas);
 void			print_formated_digit(t_fdata *fdatas);
 void			print_formated_octal(t_fdata *fdatas);
-void			print_formated_hex(t_fdata *fdatas, char specifier);
+void			print_formated_hex(t_fdata *fdatas);
 void			print_formated_unsigned(t_fdata *fdatas);
 void			print_formated_space(const char *format, t_fdata *fdatas);
 
+void			vprint_formated_hex(t_fdata *fdatas, uintmax_t value);
 
 int				ft_putwchar(wchar_t *unicode_point);
 //char			*ft_towstr(wchar_t *unicode_point, int *len);

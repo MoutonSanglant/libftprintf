@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 19:02:39 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/15 22:35:31 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 23:07:34 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 
 	if (flags & FLAG_NUMBERSIGN)
 	{
-		if (*fdatas->stop == 'x')
-			sign = "0x";
-		else if (*fdatas->stop == 'X')
+		if (*fdatas->stop == 'X')
 			sign = "0X";
+		else
+			sign = "0x";
 	}
 
 	if (width <= to_write)

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/15 18:37:05 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 23:07:03 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,11 @@ static size_t		nblen(uintptr_t value)
 
 void			print_formated_pointer(t_fdata *fdatas)
 {
-	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE);
 	if (fdatas->flag & FLAG_ZERO)
 		fdatas->flag |= FLAG_LESS;
 	fdatas->length = LENGTH_LL;
 	fdatas->flag |= FLAG_NUMBERSIGN;
-	print_formated_hex(fdatas, 'x');
+	print_formated_hex(fdatas);
 	/*
 	uintptr_t	value;
 

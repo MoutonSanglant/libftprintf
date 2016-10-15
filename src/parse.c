@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 20:41:02 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 22:56:00 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static int			check_common_spec(t_fdata *fdatas,
 	else if (*spec == 'u' || *spec == 'U')
 		print_formated_unsigned(fdatas);
 	else if (*spec == 'x' || *spec == 'X')
-		print_formated_hex(fdatas, *spec);
+		print_formated_hex(fdatas);
 	else
 		return (0);
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:07 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/15 22:47:31 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 23:11:08 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,19 +102,21 @@ static size_t		nblen(uintptr_t value)
 	return (l);
 }
 
-void			print_formated_hex(t_fdata *fdatas, char specifier)
+void			print_formated_hex(t_fdata *fdatas)
 {
 	uintmax_t	value;
-	size_t		length;
 
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE);
 	if ((value = va_uint(fdatas)))
 	{
-		length = nblen(value);
-		if (specifier == 'X')
-			write_format(&value, length, fdatas, &conversion_upper);
+		if (*fdatas->stop == 'X')
+			write_format(&value, nblen(value), fdatas, &conversion_upper);
 		else
-			write_format(&value, length, fdatas, &conversion);
+			write_format(&value, nblen(value), fdatas, &conversion);
+	}
+	else if (*fdatas->stop == 'p')
+	{
+		write_format("", 0, fdatas, NULL);
 	}
 	else if (fdatas->precision == 0)
 	{
