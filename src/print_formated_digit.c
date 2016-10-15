@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:59 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 20:34:42 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 06:55:02 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static void		justify_right(t_fdata *fdatas, char *str)
 	//fdatas->out = ft_strconcat(fdatas->out, str);
 }
 */
-
+/*
 static char		*str_from_arg(t_fdata *fdatas)
 {
 	if (fdatas->length == LENGTH_NONE)
@@ -101,9 +101,51 @@ static char		*str_from_arg(t_fdata *fdatas)
 		return (ft_itoa((signed char)va_arg(*fdatas->ap, int)));
 	return (NULL);
 }
+*/
+
+static void	conversion(void *dst, const void *src, size_t n)
+{
+	char		*to;
+	char		*str;
+	intptr_t	value;
+	int			sign;
+
+	value = (intptr_t)*((intptr_t *)src);
+	//sign = (value < 0) ? 1 : 0;
+	sign = (value < 0) ? 1 : 0;
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str >= to)
+	{
+		*str-- = (sign > 0) ? HEX_TABLE(-(value % 10)) : HEX_TABLE(value % 10);
+		value /= 10;
+	}
+	dst = (void *)str;
+}
+
+static size_t		nblen(intptr_t value)
+{
+	size_t		l;
+
+	l = 1;
+	while (value /= 10)
+		l++;
+	return (l);
+}
 
 void			print_formated_digit(t_fdata *fdatas)
 {
+	intmax_t	value;
+	size_t		length;
+
+	if ((value = va_int(fdatas)))
+	{
+		length = nblen(value);
+		if (value < 0)
+			fdatas->flag |= FLAG_NEGATIVE;
+		write_format(&value, length, fdatas, conversion);
+	}
+	/*
 	char	*str;
 	int		len;
 
@@ -139,4 +181,5 @@ void			print_formated_digit(t_fdata *fdatas)
 	// ===========
 
 	ft_strdel(&str);
+	*/
 }

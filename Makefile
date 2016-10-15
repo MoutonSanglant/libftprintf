@@ -34,6 +34,7 @@ OBJ_PREFIX = ./obj/
 
 SRC		=	parse \
 			buffer \
+			va \
 			print_formated_string \
 			print_formated_digit \
 			print_formated_hex \

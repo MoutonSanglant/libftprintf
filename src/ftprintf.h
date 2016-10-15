@@ -48,7 +48,8 @@ typedef enum	e_fflag
 	FLAG_SPACE = 0x4,
 	FLAG_NUMBERSIGN = 0x8,
 	FLAG_ZERO = 0x10,
-	FLAG_FORMAT_ERROR = 0x20
+	FLAG_NEGATIVE = 0x20,
+	FLAG_FORMAT_ERROR = 0x40
 }				t_fflag;
 
 typedef enum	e_flength
@@ -86,6 +87,9 @@ typedef struct	s_fdata
 	char		*stop;
 	int			idx;
 }				t_fdata;
+
+intmax_t		va_int(t_fdata *fdatas);
+uintmax_t		va_uint(t_fdata *fdatas);
 
 void			parse(const char *format, t_fdata *fdatas);
 

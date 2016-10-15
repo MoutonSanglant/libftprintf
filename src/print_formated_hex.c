@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:07 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 23:01:50 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 00:12:45 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,27 +22,6 @@ static void		justify(char *str, t_fdata *fdatas)
 }
 */
 
-static uintmax_t	get_arg_value(t_fdata *fdatas)
-{
-	uintmax_t	value;
-
-	value = 0;
-	if (fdatas->length == LENGTH_NONE)
-		value = (uintmax_t)va_arg(*fdatas->ap, unsigned int);
-	else if (fdatas->length & LENGTH_Z)
-		value = (uintmax_t)va_arg(*fdatas->ap, size_t);
-	else if (fdatas->length & LENGTH_J)
-		value = (uintmax_t)va_arg(*fdatas->ap, uintmax_t);
-	else if (fdatas->length & LENGTH_LL)
-		value = (uintmax_t)va_arg(*fdatas->ap, uint64_t);
-	else if (fdatas->length & LENGTH_L)
-		value = (uintmax_t)va_arg(*fdatas->ap, unsigned long);
-	else if (fdatas->length & LENGTH_H)
-		value = (uintmax_t)((unsigned short)va_arg(*fdatas->ap, unsigned int));
-	else if (fdatas->length & LENGTH_HH)
-		value = (uintmax_t)((unsigned char)va_arg(*fdatas->ap, unsigned int));
-	return (value);
-}
 
 /*
 static void		print_hex_string(t_fdata *fdatas, char *str, char specifier)
@@ -167,8 +146,7 @@ void			print_formated_hex(t_fdata *fdatas, char specifier)
 	size_t		length;
 	void		(*conversion_fn)(void *, const void *, size_t);
 
-
-	if ((value = get_arg_value(fdatas)))
+	if ((value = va_uint(fdatas)))
 	{
 		length = nblen(value);
 		if ((fdatas->flag & FLAG_NUMBERSIGN))

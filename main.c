@@ -13,11 +13,101 @@ int main(void)
 
 	setlocale(LC_ALL, "fr_FR.UTF-8");
 
+	write(1, "==========\n==========", 11);
+	ft_printf("%+05d\n", 42);
+	printf("%+05d\n", 42);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%+07.3d\n", 42);
+	printf("%+07.3d\n", 42);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%0-20d\n", 4242);
+	printf("%0-20d\n", 4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%i %0i %i\n", 4242, 4242, 4242);
+	printf("%i %0i %i\n", 4242, 4242, 4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%0i\n", -4242);
+	printf("%0i\n", -4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%010i\n", 4242);
+	printf("%010i\n", 4242);
+	fflush(stdout);
+
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%10i\n", -4242);
+	printf("%10i\n", -4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%.10i\n", 4242);
+	printf("%.10i\n", 4242);
+	fflush(stdout);
+
+	write(1, "**********\n==========", 11);
+	ft_printf("%.10i\n", -4242);
+	printf("%.10i\n", -4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%2i\n", 4242);
+	printf("%2i\n", 4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%2i\n", -4242);
+	printf("%2i\n", -4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%.2i\n", -4242);
+	printf("%.2i\n", -4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%10.6i\n", 4242);
+	printf("%10.6i\n", 4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%10.6i\n", -4242);
+	printf("%10.6i\n", -4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%6.10i\n", 4242);
+	printf("%6.10i\n", 4242);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("%6.10i\n", -4242);
+	printf("%6.10i\n", -4242);
+	fflush(stdout);
+
+	ft_printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	fflush(stdout);
+	return (0);
+
+	ft_printf("%2.0s is a string\n", "this");
+	printf("%2.0s is a string\n", "this");
+	fflush(stdout);
+
 	ft_printf("p: %p\n", &length);
 	printf("p: %p\n", &length);
 	fflush(stdout);
 
-	ft_printf("%+i\neee\n", nb);
+	ft_printf("%+i\n", nb);
 	printf("%+i\n", nb);
 	fflush(stdout);
 	return (0);

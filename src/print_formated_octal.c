@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:17 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 20:34:42 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 01:40:35 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void		justify(char *str, t_fdata *fdatas)
 }
 */
 
+/*
 static char		*str_from_arg(t_fdata *fdatas)
 {
 	if (fdatas->length == LENGTH_NONE)
@@ -40,6 +41,7 @@ static char		*str_from_arg(t_fdata *fdatas)
 		return (ft_itoa_base((unsigned char)va_arg(*fdatas->ap, unsigned int), 8));
 	return (NULL);
 }
+*/
 
 /*
 static void		printf_octal_string(t_fdata *fdatas, char *str)
@@ -73,11 +75,70 @@ static void		printf_octal_string(t_fdata *fdatas, char *str)
 }
 */
 
+static void	conversion(void *dst, const void *src, size_t n)
+{
+	char		*to;
+	char		*str;
+	uintptr_t	value;
+
+	value = (uintptr_t)*((uintptr_t *)src);
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str >= to)
+	{
+		*str-- = HEX_TABLE(value % 8);
+		value /= 8;
+	}
+	dst = (void *)str;
+}
+
+static void	conversion_prefixed(void *dst, const void *src, size_t n)
+{
+	char		*to;
+	char		*str;
+	uintptr_t	value;
+
+	value = (uintptr_t)*((uintptr_t *)src);
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str > to)
+	{
+		*str-- = HEX_TABLE(value % 8);
+		value /= 8;
+	}
+	*str++ = '0';
+	dst = (void *)str;
+}
+
+static size_t		nblen(uintptr_t value)
+{
+	size_t		l;
+
+	l = 1;
+	while (value /= 8)
+		l++;
+	return (l);
+}
+
 void			print_formated_octal(t_fdata *fdatas)
 {
+	uintmax_t	value;
+	size_t		length;
+
+	if ((value = va_uint(fdatas)))
+	{
+		length = nblen(value);
+		if (fdatas->flag & FLAG_NUMBERSIGN)
+		{
+			length++;
+			write_format(&value, length, fdatas, conversion_prefixed);
+		}
+		else
+			write_format(&value, length, fdatas, conversion);
+	}
+	/*
 	char	*str;
 	int		len;
-
 	str = str_from_arg(fdatas);
 	if (str[0] == '0'
 			&& (fdatas->precision == 0 || fdatas->flag & FLAG_NUMBERSIGN))
@@ -86,11 +147,12 @@ void			print_formated_octal(t_fdata *fdatas)
 	//	fdatas->precision--;
 	len = ft_strlen(str);
 	write_format(str, len, fdatas, NULL);
+	*/
 	/*
 	fdatas->precision = fdatas->precision - len;
 	fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;
 	fdatas->width = fdatas->width - fdatas->precision - len;
 	printf_octal_string(fdatas, str);
 	*/
-	ft_strdel(&str);
+	//ft_strdel(&str);
 }
