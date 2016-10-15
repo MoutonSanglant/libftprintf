@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:07 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/15 00:12:45 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 22:47:31 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,25 +75,6 @@ static void	conversion(void *dst, const void *src, size_t n)
 	dst = (void *)str;
 }
 
-static void	conversion_prefixed(void *dst, const void *src, size_t n)
-{
-	char		*to;
-	char		*str;
-	uintptr_t	value;
-
-	value = (uintptr_t)*((uintptr_t *)src);
-	str = &((char *)dst)[n - 1];
-	to = (char *)dst;
-	while (str > to)
-	{
-		*str-- = HEX_TABLE(value % 16);
-		value /= 16;
-	}
-	*str++ = '0';
-	*str++ = 'x';
-	dst = (void *)str;
-}
-
 static void	conversion_upper(void *dst, const void *src, size_t n)
 {
 	char		*to;
@@ -111,25 +92,6 @@ static void	conversion_upper(void *dst, const void *src, size_t n)
 	dst = (void *)str;
 }
 
-static void	conversion_upper_prefixed(void *dst, const void *src, size_t n)
-{
-	char		*to;
-	char		*str;
-	uintptr_t	value;
-
-	value = (uintptr_t)*((uintptr_t *)src);
-	str = &((char *)dst)[n - 1];
-	to = (char *)dst;
-	while (str > to)
-	{
-		*str-- = HEX_TABLE_UPPER(value % 16);
-		value /= 16;
-	}
-	*str++ = '0';
-	*str++ = 'X';
-	dst = (void *)str;
-}
-
 static size_t		nblen(uintptr_t value)
 {
 	size_t		l;
@@ -144,22 +106,24 @@ void			print_formated_hex(t_fdata *fdatas, char specifier)
 {
 	uintmax_t	value;
 	size_t		length;
-	void		(*conversion_fn)(void *, const void *, size_t);
 
+	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE);
 	if ((value = va_uint(fdatas)))
 	{
 		length = nblen(value);
-		if ((fdatas->flag & FLAG_NUMBERSIGN))
-		{
-			length += 2;
-			conversion_fn = (specifier == 'X') ? &conversion_upper_prefixed : &conversion_prefixed;
-		}
+		if (specifier == 'X')
+			write_format(&value, length, fdatas, &conversion_upper);
 		else
-			conversion_fn = (specifier == 'X') ? &conversion_upper : &conversion;
-		write_format(&value, length, fdatas, conversion_fn);
+			write_format(&value, length, fdatas, &conversion);
 	}
 	else if (fdatas->precision == 0)
+	{
+		remove_flags(fdatas, FLAG_NUMBERSIGN);
 		write_format("", 0, fdatas, NULL);
+	}
 	else
+	{
+		remove_flags(fdatas, FLAG_NUMBERSIGN);
 		write_format("0", 1, fdatas, NULL);
+	}
 }

@@ -14,6 +14,16 @@ int main(void)
 	setlocale(LC_ALL, "fr_FR.UTF-8");
 
 	write(1, "==========\n==========", 11);
+	ft_printf("%-i\n", -42);
+	printf("%-i\n", -42);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
+	ft_printf("% d\n", -42);
+	printf("% d\n", -42);
+	fflush(stdout);
+
+	write(1, "==========\n==========", 11);
 	ft_printf("%+05d\n", 42);
 	printf("%+05d\n", 42);
 	fflush(stdout);

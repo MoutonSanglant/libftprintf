@@ -49,7 +49,7 @@ typedef enum	e_fflag
 	FLAG_NUMBERSIGN = 0x8,
 	FLAG_ZERO = 0x10,
 	FLAG_NEGATIVE = 0x20,
-	FLAG_FORMAT_ERROR = 0x40
+	FLAG_FORMAT_ERROR = 0x100
 }				t_fflag;
 
 typedef enum	e_flength
@@ -95,6 +95,8 @@ void			parse(const char *format, t_fdata *fdatas);
 
 void			write_to_buffer(const void *str, int count, t_fdata *fdatas);
 void			write_format(const void *str, int count, t_fdata *fdatas, void (*cpy_fn)(void *, const void *, size_t));
+
+void			remove_flags(t_fdata *fdatas, t_fflag mask);
 
 int				print_formated_char(t_fdata *fdatas);
 int				print_formated_widechar(t_fdata *fdatas);

@@ -6,19 +6,19 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 22:59:46 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/15 18:37:05 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
+/*
 static void		remove_extra_flags(t_fdata *fdatas)
 {
 	fdatas->flag ^= (fdatas->flag & FLAG_SPACE) ? FLAG_SPACE : FLAG_NONE;
 	fdatas->flag ^= (fdatas->flag & FLAG_MORE) ? FLAG_MORE : FLAG_NONE;
-	if (fdatas->flag & FLAG_ZERO)
-		fdatas->flag |= FLAG_LESS;
 }
+*/
 
 /*
 ** Write numbers backward then write '0x' forward
@@ -56,7 +56,9 @@ static size_t		nblen(uintptr_t value)
 
 void			print_formated_pointer(t_fdata *fdatas)
 {
-	remove_extra_flags(fdatas);
+	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE);
+	if (fdatas->flag & FLAG_ZERO)
+		fdatas->flag |= FLAG_LESS;
 	fdatas->length = LENGTH_LL;
 	fdatas->flag |= FLAG_NUMBERSIGN;
 	print_formated_hex(fdatas, 'x');
