@@ -54,22 +54,8 @@ SRC		=	parse \
 			ft_snprintf \
 			ft_wstrlen \
 			ft_wstrcpy \
-			ft_isdigit \
-			ft_isspace \
-			ft_strdel \
 			ft_strlen \
-			ft_strncpy \
-			ft_strnew \
-			ft_strchr \
-			ft_strjoin \
-			ft_strdup \
-			ft_strpbrk \
-			ft_toupper \
 			ft_atoi \
-			ft_itoa \
-			ft_imaxtoa \
-			ft_uitoa \
-			ft_itoa_base
 
 ifeq ($(BUILD), Debug)
 	SRC +=

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:22 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 16:06:14 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/16 04:24:20 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ int			ft_vdprintf(int fd, const char *restrict format, va_list *ap)
 	//if ((output = ft_vsprintf(format, ap)))
 		//ret = write(fd, output, ft_strlen(output));
 	if ((ret = ft_vasprintf(&output, format, ap)))
-		ret = write(fd, output, ret);
-	ft_strdel(&output);
+		write(fd, output, ret);
+		//ret = write(fd, output, ret);
+	//ft_strdel(&output);
+	free(output);
 	return (ret);
 }
 

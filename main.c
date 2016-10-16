@@ -13,6 +13,19 @@ int main(void)
 
 	setlocale(LC_ALL, "fr_FR.UTF-8");
 
+	//printf("{%-30S}", L"我是一只猫。");
+	//printf("{%+05.S}", L"42 c est cool");
+	//printf("%-17S", L"বशݜݗ");
+	//printf("%4.2S", L"ݗݜशব");
+	//printf("%-17.11S", L"ݗݜशবݜ");
+	//printf("%97.35S", L"uèéeêëēėęOবशݜݗèéeêëēėęO");
+	fflush(stdout);
+
+	printf("{%10RN}\n");
+	ft_printf("{%10RN}\n");
+	fflush(stdout);
+
+	return (0);
 	write(1, "==========\n==========", 11);
 	ft_printf("%-i\n", -42);
 	printf("%-i\n", -42);
@@ -34,9 +47,9 @@ int main(void)
 	fflush(stdout);
 
 	write(1, "==========\n==========", 11);
-	ft_printf("%0-20d\n", 4242);
-	printf("%0-20d\n", 4242);
-	fflush(stdout);
+	//ft_printf("%0-20d\n", 4242);
+	//printf("%0-20d\n", 4242);
+	//fflush(stdout);
 
 	write(1, "==========\n==========", 11);
 	ft_printf("%i %0i %i\n", 4242, 4242, 4242);

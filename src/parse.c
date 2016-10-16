@@ -6,25 +6,43 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/15 22:56:00 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/16 04:20:43 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
+
+static char			*ft_strpbrk(const char *s1, const char *s2)
+{
+	int		i;
+
+	while (*s1)
+	{
+		i = 0;
+		while (s2[i])
+		{
+			if (*s1 == s2[i])
+				return ((char *)s1);
+			i++;
+		}
+		s1++;
+	}
+	return (NULL);
+}
 
 static int			get_precision_width_length(const char **f, t_fdata *d)
 {
 	if (**f == '.' && (*f += 1))
 	{
 		d->precision = ft_atoi(*f);
-		while (ft_isdigit(**f))
+		while (isdigit(**f))
 			*f += 1;
 		*f -= 1;
 	}
-	else if (ft_isdigit(**f))
+	else if (isdigit(**f))
 	{
 		d->width = ft_atoi(*f);
-		while (ft_isdigit(**f))
+		while (isdigit(**f))
 			*f += 1;
 		*f -= 1;
 	}
@@ -73,22 +91,11 @@ static const char	*get_format_datas(const char *format,
 
 static int			is_long(const char *spec)
 {
-	char	*str;
-
-	str = ft_strnew(1);
-	str[0] = spec[0];
-	str[1] = '\0';
-	if (ft_strpbrk(str, "SDOUC"))
-	{
-		ft_strdel(&str);
-		return (1);
-	}
-	ft_strdel(&str);
-	return (0);
+	return (*spec == 'S' || *spec == 'D'
+			|| *spec == 'O' || *spec == 'U' || *spec == 'C');
 }
 
-static int			check_common_spec(t_fdata *fdatas,
-											const char *spec)
+static int			check_common_spec(t_fdata *fdatas, const char *spec)
 {
 	if (*spec == 's' || *spec == 'S')
 		print_formated_string(fdatas, NULL);
@@ -111,12 +118,11 @@ static void			expand(const char *format, t_fdata *fdatas)
 {
 	const char	*spec;
 
-	fdatas->stop = ft_strpbrk(format, "sSpdDioOuUxXcC%");
-	//parse(format, fdatas);
 	if (!(spec = ft_strpbrk(format, "sSpdDioOuUxXcC%")))
 		spec = get_format_datas(format, format + ft_strlen(format), fdatas);
 	else
 		spec = get_format_datas(format, spec, fdatas);
+	fdatas->stop = spec;
 	if (is_long(spec))
 		fdatas->length = LENGTH_L;
 	if (!check_common_spec(fdatas, spec))
@@ -132,7 +138,7 @@ static void			expand(const char *format, t_fdata *fdatas)
 				return ;
 		}
 		else
-			print_formated_space(spec, fdatas);
+			print_formated_space(fdatas);
 	}
 	return;
 }
@@ -143,5 +149,5 @@ void				parse(const char *format, t_fdata *fdatas)
 	if (*format == '%')
 		expand(&format[1], fdatas);
 	else
-		write_to_buffer(format, fdatas->bcount, fdatas);
+		write_to_buffer(format, fdatas);
 }

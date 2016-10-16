@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:24 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 21:18:30 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/16 02:37:55 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@
 **	mask17 = 0b00000000000000010000000000000000; <=> (1 << 16)
 */
 
-//static void		convert(unsigned char *h, char **str, int len)
 static void		convert(unsigned char *h, char *str, int len)
 {
 	int		i;
@@ -95,8 +94,14 @@ static void		convert(unsigned char *h, char *str, int len)
 
 
 
-#include <stdio.h>
-
+/*
+**	6-bytes extension
+**	=================
+**	else if (c <= MASK26)
+**		wchar_size = 5;
+**	else if (c <= MASK31)
+**		wchar_size = 6;
+*/
 int			ft_wstrcpy(char *dst, wchar_t *src, int count)
 {
 	wchar_t	c;
@@ -105,17 +110,13 @@ int			ft_wstrcpy(char *dst, wchar_t *src, int count)
 
 	end_ptr = &dst[count];
 
-	//printf("[dump] widestring length: %i\n", count);
-	//fflush(stdout);
-
 	while (dst < end_ptr)
 	{
 		c = *src;
 
-		//printf("[dump] writting unicode point '%C' at address: %p\n", c, dst);
-		//fflush(stdout);
-
 		src++;
+		if (c < 0)
+			return (-1);
 		if (c <= MASK7)
 		{
 			*dst = c;
@@ -128,14 +129,11 @@ int			ft_wstrcpy(char *dst, wchar_t *src, int count)
 			wchar_size = 3;
 		else if (c <= MASK21)
 			wchar_size = 4;
-		else if (c <= MASK26)
-			wchar_size = 5;
 		else
-			wchar_size = 6;
+			return (-1);
 
 		convert((unsigned char *)&c, dst, wchar_size);
 		dst += wchar_size;
 	}
-	//*dst = '\0';
 	return (count);
 }

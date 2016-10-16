@@ -6,12 +6,26 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 19:02:39 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/15 23:07:34 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/16 04:25:59 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 #include <stdio.h>
+
+
+static char	*ft_strchr(char const *s, int c)
+{
+	if ((char)c == '\0')
+		return (&((char *)s)[ft_strlen(s)]);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	return (NULL);
+}
 
 static void	cpy_to_buffer(void *dst, void const *src, size_t n)
 {
@@ -35,6 +49,15 @@ static size_t	memset_buffer_segment(void *b, int c, size_t len)
 	return (i);
 }
 
+/*
+** Happens on malformated widechar
+*/
+void	write_error(t_fdata *fdatas)
+{
+	fdatas->flag |= FLAG_WRITE_ERROR;
+	write_to_buffer("", fdatas);
+}
+
 // width: nombre d'octets a imprimer
 // precision: nombre minimum de caracteres a afficher
 // printed_char: nombre de caracteres a imprimer (sans les modificateurs)
@@ -44,17 +67,13 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 	int		start_offset;
 	int		write_offset;
 	int		sign_position;
-	char	*sign;
+	char	*sign; // prefix
 
 	sign = "+";
 	sign_position = 0;
 	start_offset = 0;
 	flags = fdatas->flag;
 
-	if (!fdatas->stop)
-		write(1, "!! error !!", 12);
-
-	//int precision = (fdatas->precision < printed_char) ? printed_char : fdatas->precision;
 	int precision = fdatas->precision;
 	int to_write = (precision < printed_char) ? printed_char : precision;
 	int width = fdatas->width;
@@ -66,7 +85,14 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 
 	if (flags & FLAG_NUMBERSIGN)
 	{
-		if (*fdatas->stop == 'X')
+		flags |= FLAG_PREFIXED;
+		if (*fdatas->stop == 'o' || *fdatas->stop == 'O')
+		{
+			if (printed_char < precision)
+				flags &= ~FLAG_PREFIXED;
+			sign = "0";
+		}
+		else if (*fdatas->stop == 'X')
 			sign = "0X";
 		else
 			sign = "0x";
@@ -77,11 +103,11 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 		width = to_write;
 		if (sign[1])
 			width += 2;
-		else if (flags & (FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE))
+		else if (flags & (FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE | FLAG_PREFIXED))
 			width++;
 	}
 
-	//printf("\n[dump]\nstr: %s\nwcount: %i\nprecision: %i\nwidth: %i\n", src, wcount, precision, width);
+	//printf("\n[dump]\nstr: %s\nprinted_char: %i\nto_write: %i\nprecision: %i\nwidth: %i\n", src, printed_char, to_write, precision, width);
 
 	start_offset = fdatas->bcount;
 	fdatas->bcount += width;
@@ -100,7 +126,7 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 	{
 		if (sign[1])
 			write_offset += 2;
-		else if (flags & (FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE))
+		else if (flags & (FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE | FLAG_PREFIXED))
 			write_offset++;
 		sign_position = write_offset;
 		write_offset += memset_buffer_segment(&fdatas->out[write_offset], '0', to_write - printed_char);
@@ -136,7 +162,7 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 
 	cpy_fn = (cpy_fn) ? cpy_fn : &cpy_to_buffer;
 	cpy_fn(&fdatas->out[write_offset], src, printed_char);
-	if (flags & (FLAG_NEGATIVE | FLAG_MORE | FLAG_SPACE) || sign[1])
+	if (flags & (FLAG_NEGATIVE | FLAG_MORE | FLAG_SPACE | FLAG_PREFIXED) || sign[1])
 	{
 		int sign_len;
 		int i;
@@ -160,10 +186,11 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 	}
 }
 
-void	write_to_buffer(const void *src, int wcount, t_fdata *fdatas)
+void	write_to_buffer(const void *src, t_fdata *fdatas)
 {
 	const char	*spec_char_ptr;
-	int idx;
+	int			idx;
+	int			wcount;
 
 	idx = fdatas->bcount;
 	spec_char_ptr = ft_strchr((char *)src, '%');
@@ -180,13 +207,6 @@ void	write_to_buffer(const void *src, int wcount, t_fdata *fdatas)
 		wcount = spec_char_ptr - (char *)src;
 		fdatas->idx += wcount;
 		fdatas->bcount += wcount;
-		/*
-		printf("[dump]\nstr: '%s'\nidx: %i\n", fdatas->format, fdatas->idx);
-		fflush(stdout);
-		printf("[dump]\nnew char: '%s'\n", &fdatas->format[fdatas->idx]);
-		fflush(stdout);
-		*/
-
 		parse(&fdatas->format[fdatas->idx], fdatas);
 	}
 	cpy_to_buffer(&fdatas->out[idx], src, wcount);

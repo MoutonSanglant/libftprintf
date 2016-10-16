@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:07 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/15 23:11:08 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/16 02:54:19 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,18 +114,16 @@ void			print_formated_hex(t_fdata *fdatas)
 		else
 			write_format(&value, nblen(value), fdatas, &conversion);
 	}
-	else if (*fdatas->stop == 'p')
-	{
-		write_format("", 0, fdatas, NULL);
-	}
 	else if (fdatas->precision == 0)
 	{
-		remove_flags(fdatas, FLAG_NUMBERSIGN);
+		if (*fdatas->stop != 'p')
+			remove_flags(fdatas, FLAG_NUMBERSIGN);
 		write_format("", 0, fdatas, NULL);
 	}
 	else
 	{
-		remove_flags(fdatas, FLAG_NUMBERSIGN);
+		if (*fdatas->stop != 'p')
+			remove_flags(fdatas, FLAG_NUMBERSIGN);
 		write_format("0", 1, fdatas, NULL);
 	}
 }

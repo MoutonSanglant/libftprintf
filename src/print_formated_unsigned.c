@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:48 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/14 20:34:42 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/10/16 00:53:16 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static void		justify_right(t_fdata *fdatas, char *str)
 }
 */
 
+/*
 static char		*str_from_arg(t_fdata *fdatas)
 {
 	if (fdatas->length == LENGTH_NONE)
@@ -52,9 +53,53 @@ static char		*str_from_arg(t_fdata *fdatas)
 		return (ft_uitoa((unsigned char)va_arg(*fdatas->ap, unsigned int)));
 	return (NULL);
 }
+*/
+
+static void	conversion(void *dst, const void *src, size_t n)
+{
+	char		*to;
+	char		*str;
+	uintptr_t	value;
+
+	value = (uintptr_t)*((uintptr_t *)src);
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str >= to)
+	{
+		*str-- = HEX_TABLE(value % 10);
+		value /= 10;
+	}
+	dst = (void *)str;
+}
+
+static size_t		nblen(uintptr_t value)
+{
+	size_t		l;
+
+	l = 1;
+	while (value /= 10)
+		l++;
+	return (l);
+}
 
 void			print_formated_unsigned(t_fdata *fdatas)
 {
+	uintmax_t	value;
+	size_t		length;
+
+	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE | FLAG_NUMBERSIGN);
+
+	if ((value = va_uint(fdatas)))
+	{
+		length = nblen(value); // Clamp with precision ??
+		write_format(&value, length, fdatas, conversion);
+	}
+	else if (!(fdatas->flag & FLAG_NUMBERSIGN) && fdatas->precision == 0)
+		write_format("", 0, fdatas, NULL);
+	else
+		write_format("0", 1, fdatas, NULL);
+
+	/*
 	char			*str;
 	int				len;
 
@@ -65,6 +110,7 @@ void			print_formated_unsigned(t_fdata *fdatas)
 		fdatas->fill_char = " ";
 	len = ft_strlen(str);
 	write_format(str, ft_strlen(str), fdatas, NULL);
+	*/
 	/*
 	fdatas->precision = fdatas->precision - len;
 	fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;
@@ -74,5 +120,5 @@ void			print_formated_unsigned(t_fdata *fdatas)
 	else
 		justify_right(fdatas, str);
 		*/
-	ft_strdel(&str);
+	//ft_strdel(&str);
 }
