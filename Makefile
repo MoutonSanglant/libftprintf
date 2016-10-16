@@ -32,37 +32,11 @@ endif
 SRC_PREFIX = ./src/
 OBJ_PREFIX = ./obj/
 
-SRC		=	parse \
-			buffer \
-			va \
-			flags \
-			print_formated_string \
-			print_formated_digit \
-			print_formated_hex \
-			print_formated_unsigned \
-			print_formated_space \
-			print_formated_char \
-			print_formated_widechar \
-			print_formated_octal \
-			print_formated_pointer \
-			ft_printf \
-			ft_eprintf \
-			ft_dprintf \
-			ft_fprintf \
-			ft_asprintf \
-			ft_sprintf \
-			ft_snprintf \
-			ft_wstrlen \
-			ft_wstrcpy \
-			ft_strlen \
-			ft_atoi \
+SRC	=	$(shell ls $(SRC_PREFIX)*.c)
 
 ifeq ($(BUILD), Debug)
 	SRC +=
 endif
-
-SRC := $(addsuffix .c, $(SRC))
-SRC := $(addprefix $(SRC_PREFIX), $(SRC))
 
 OBJ = $(subst $(SRC_PREFIX), , $(SRC:.c=$(SUFFIX)))
 OBJ := $(addprefix $(OBJ_PREFIX), $(OBJ))

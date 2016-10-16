@@ -23,3 +23,7 @@ vgcore.*
 
 ### Temporary files ###
 _*
+
+
+### Binaries ###
+*.out
