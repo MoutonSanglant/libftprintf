@@ -6,28 +6,11 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:17 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/16 03:08:42 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/04 04:30:49 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
-
-static void	conversion(void *dst, const void *src, size_t n)
-{
-	char		*to;
-	char		*str;
-	uintptr_t	value;
-
-	value = (uintptr_t)*((uintptr_t *)src);
-	str = &((char *)dst)[n - 1];
-	to = (char *)dst;
-	while (str >= to)
-	{
-		*str-- = HEX_TABLE(value % 8);
-		value /= 8;
-	}
-	dst = (void *)str;
-}
 
 static size_t		nblen(uintptr_t value)
 {
@@ -37,6 +20,27 @@ static size_t		nblen(uintptr_t value)
 	while (value /= 8)
 		l++;
 	return (l);
+}
+
+static void	conversion(void *dst, const void *src, size_t n)
+{
+	char		*to;
+	char		*str;
+	uintptr_t	value;
+	int			l;
+
+	value = (uintptr_t)*((uintptr_t *)src);
+	l = nblen(value) - 1;
+	while (l-- >= (int)n)
+		value /= 8;
+	str = &((char *)dst)[n - 1];
+	to = (char *)dst;
+	while (str >= to)
+	{
+		*str-- = HEX_TABLE(value % 8);
+		value /= 8;
+	}
+	dst = (void *)str;
 }
 
 void			print_formated_octal(t_fdata *fdatas)

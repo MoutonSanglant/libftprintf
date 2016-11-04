@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <locale.h>
 #include "src/ftprintf.h"
 
@@ -11,7 +12,8 @@ int main(void)
 
 	nb = 42;
 
-	setlocale(LC_ALL, "fr_FR.UTF-8");
+	//setlocale(LC_ALL, "fr_FR.UTF-8");
+	setlocale(LC_ALL, "en_US.UTF-8");
 
 	//printf("{%-30S}", L"我是一只猫。");
 	//printf("{%+05.S}", L"42 c est cool");
@@ -19,13 +21,89 @@ int main(void)
 	//printf("%4.2S", L"ݗݜशব");
 	//printf("%-17.11S", L"ݗݜशবݜ");
 	//printf("%97.35S", L"uèéeêëēėęOবशݜݗèéeêëēėęO");
+	//fflush(stdout);
+
+	char	buf[100];
+	char	ft_buf[100];
+	char	r_buf[3];
+	char	ft_r_buf[3];
+	char	long_buf[50000];
+	char	ft_long_buf[50000];
+/*
+	sprintf(buf, "hello !");
+	ft_sprintf(ft_buf, "hello !");
+	printf("**_sprintf: %s\nft_sprintf: %s\n", buf, ft_buf);
 	fflush(stdout);
 
-	printf("{%10RN}\n");
+	sprintf(buf, "hello %s !", "world");
+	ft_sprintf(ft_buf, "hello %s !", "world");
+	printf("**_sprintf: %s\nft_sprintf: %s\n", buf, ft_buf);
+	fflush(stdout);
+
+	snprintf(buf, 3, "hello !");
+	ft_snprintf(ft_buf, 3, "hello !");
+	printf("**_snprintf: %s\nft_snprintf: %s\n", buf, ft_buf);
+	fflush(stdout);
+
+*/	
+	snprintf(buf, 3, "hello %s !", "world");
+	ft_snprintf(ft_buf, 3, "hello %s !", "world");
+	printf("**_snprintf: %s\nft_snprintf: %s\n", buf, ft_buf);
+	fflush(stdout);
+
+	snprintf(buf, 12, "%i, %i, %i, %i :: %i !", 41, 311, 849301, 0, 42);
+	ft_snprintf(ft_buf, 12, "%i, %i, %i, %i :: %i !", 41, 311, 849301, 0, 42);
+	printf("**_snprintf: %s\nft_snprintf: %s\n", buf, ft_buf);
+	fflush(stdout);
+
+	snprintf(buf, 12, "%u, %u, %u, %u :: %u !", 41, 311, 849301, 0, 42);
+	ft_snprintf(ft_buf, 12, "%u, %u, %u, %u :: %u !", 41, 311, 849301, 0, 42);
+	printf("**_snprintf: %s\nft_snprintf: %s\n", buf, ft_buf);
+	fflush(stdout);
+
+	snprintf(buf, 12, "%x, %x, %x, %x :: %x !", 41, 311, 849301, 0, 42);
+	ft_snprintf(ft_buf, 12, "%x, %x, %x, %x :: %x !", 41, 311, 849301, 0, 42);
+	printf("**_snprintf: %s\nft_snprintf: %s\n", buf, ft_buf);
+	fflush(stdout);
+
+	snprintf(buf, 12, "%o, %o, %o, %o :: %o !", 41, 311, 849301, 0, 42);
+	ft_snprintf(ft_buf, 12, "%o, %o, %o, %o :: %o !", 41, 311, 849301, 0, 42);
+	printf("**_snprintf: %s\nft_snprintf: %s\n", buf, ft_buf);
+	fflush(stdout);
+
+	snprintf(buf, 12, "%u, %u, %u, %u :: %u !", 41, 311, 849301, 0, 42);
+	ft_snprintf(ft_buf, 12, "%u, %u, %u, %u :: %u !", 41, 311, 849301, 0, 42);
+	printf("**_snprintf: %s\nft_snprintf: %s\n", buf, ft_buf);
+	fflush(stdout);
+
+	sprintf(long_buf, "-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	ft_sprintf(ft_long_buf, "-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	printf("**_sprintf: %s\nft_sprintf: %s\n", long_buf, ft_long_buf);
+	fflush(stdout);
+
+	snprintf(long_buf, 5, "-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	ft_snprintf(ft_long_buf, 5, "-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	printf("**_snprintf: %s\nft_snprintf: %s\n", long_buf, ft_long_buf);
+	fflush(stdout);
+	
+	ft_printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
+	fflush(stdout);
+	write(1, "\n", 1);
+	
+	//return (0);
+
+	ft_printf("hello %s !\n", "world");
+	printf("hello %s !\n", "world");
+	fflush(stdout);
+
+	//return (0);
+
 	ft_printf("{%10RN}\n");
+	printf("{%10RN}\n");
 	fflush(stdout);
 
-	return (0);
+
 	write(1, "==========\n==========", 11);
 	ft_printf("%-i\n", -42);
 	printf("%-i\n", -42);
@@ -133,13 +211,13 @@ int main(void)
 	ft_printf("%+i\n", nb);
 	printf("%+i\n", nb);
 	fflush(stdout);
-	return (0);
+	//return (0);
 
 	ft_printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
 	printf("-- %s %C, %s, %s, ok.\n", "hello", L'該', NULL, "");
 	fflush(stdout);
 
-	return (0);
+	//return (0);
 
 	str = "a sample string";
 	wstr = L"a sample wide string";
@@ -162,7 +240,7 @@ int main(void)
 	printf("%%\n");
 	fflush(stdout);
 
-	return (0);
+	//return (0);
 
 	ft_printf("%s\n", str);
 	printf("%s\n", str);
@@ -185,7 +263,9 @@ int main(void)
 	ft_printf("%S\n", unicodestr);
 	printf("\n%S\n", unicodestr);
 	fflush(stdout);
-	return (0);
+	
+	//return (0);
+	
 	ft_printf("%c", '@');
 	printf("\n%c\n", '@');
 	fflush(stdout);

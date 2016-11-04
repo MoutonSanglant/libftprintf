@@ -69,26 +69,25 @@ typedef enum	e_flength
 
 /*
 ** t_fdata
-** 8 + 8 + 8 + [4 + 4] + [4 + 4]
-** offset: 8
-** size: 40
-** lost: 0
+** 6*8 + 7*4
+** = 76 {4}
 */
 
 typedef struct	s_fdata
 {
 	void		(*numbersign)(char *, struct s_fdata *);
 	va_list		*ap;
-	char		*out;
 	const char	*format;
+	const char	*stop;
+	char		*out;
 	char		*fill_char;
 	t_fflag		flag;
 	t_flength	length;
 	int			width;
 	int			precision;
 	int			bcount;
-	const char	*stop;
 	int			idx;
+	size_t		write_size;
 }				t_fdata;
 
 intmax_t		va_int(t_fdata *fdatas);
@@ -98,6 +97,7 @@ void			parse(const char *format, t_fdata *fdatas);
 
 void			write_to_buffer(const void *str, t_fdata *fdatas);
 void			write_format(const void *str, int count, t_fdata *fdatas, void (*cpy_fn)(void *, const void *, size_t));
+//void			write_format(const void *str, int count, t_fdata *fdatas, void (*cpy_fn)(it_fdata *, const void *, size_t, size_t));
 void			write_error(t_fdata *fdatas);
 
 void			remove_flags(t_fdata *fdatas, t_fflag mask);

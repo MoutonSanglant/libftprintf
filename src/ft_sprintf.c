@@ -6,11 +6,21 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:52 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/13 16:15:44 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/04 02:53:54 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
+
+static void	*st_memset(void *b, int c, size_t len)
+{
+	size_t i;
+
+	i = 0;
+	while (i < len)
+		((char *)b)[i++] = (unsigned char)c;
+	return (b);
+}
 
 /*
 ** write characters inside `str`, `str` needs to be big enough
@@ -20,13 +30,20 @@
 */
 int		ft_vsprintf(char *restrict str, const char *restrict format, va_list *ap)
 {
-	int out;
+	t_fdata		fdatas;
 
-	(void)format;
-	(void)ap;
-	(void)str;
-	out = 0;
-	return (out);
+	st_memset(&fdatas, 0, sizeof(t_fdata));
+	fdatas.ap = ap;
+	fdatas.format = format;
+	fdatas.out = str;
+	fdatas.write_size = UINT_MAX;
+	parse(format, &fdatas);
+	// won't work, parse should return an error case
+	//if (!fdatas.out) // Returns -1 if a widechar is > 4 bytes
+	//	return (-1);
+	if (fdatas.flag & FLAG_WRITE_ERROR)
+		return (-1);
+	return (fdatas.bcount);
 }
 
 int		ft_sprintf(char *restrict str, const char *restrict format, ...)

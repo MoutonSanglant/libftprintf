@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:54 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/16 02:36:40 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/04 04:30:30 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int		wintlen(wint_t unicode_point)
 	int		bcount;
 
 	bcount = -1;
-	if (unicode_point < 0)
+	if (unicode_point & 0x80000000)
 		return (-1);
 	else if (unicode_point <= MASK7)
 		bcount = 1;

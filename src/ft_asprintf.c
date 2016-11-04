@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/02 00:21:06 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/16 03:38:22 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/03 21:27:02 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int		ft_vasprintf(char **ret, const char *format, va_list *ap)
 	st_memset(&fdatas, 0, sizeof(t_fdata));
 	fdatas.ap = ap;
 	fdatas.format = format;
+	fdatas.write_size = UINT_MAX;
 	parse(format, &fdatas);
 	if (!fdatas.out) // Returns -1 if a widechar is > 4 bytes
 		return (-1);
