@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:59 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/04 04:27:36 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/03 21:21:40 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	conversion(void *dst, const void *src, size_t n)
 
 	value = (intptr_t)*((intptr_t *)src);
 	sign = (value < 0);
-	l = sign + nblen(value) - 1;
+	l = nblen(value) - 1;
 	while (l-- >= (int)n)
 		value /= 10;
 	str = &((char *)dst)[n - 1];

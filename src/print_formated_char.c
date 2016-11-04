@@ -6,27 +6,11 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:50 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/15 23:14:25 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/03 21:21:30 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
-
-/*
-**	Case not handled:
-**	(*c == 0)
-*/
-
-/*
-static void		justify(wint_t *c, t_fdata *fdatas)
-{
-	return;
-	if (fdatas->flag & FLAG_SPACE)
-		fdatas->out = ft_strconcat(fdatas->out, " ");
-	else
-		fdatas->out = ft_strnconcat(fdatas->out, (char *)c, 1);
-}
-*/
 
 int				print_formated_char(t_fdata *fdatas)
 {
@@ -45,18 +29,5 @@ int				print_formated_char(t_fdata *fdatas)
 	fdatas->precision = -1;
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE | FLAG_NUMBERSIGN);
 	write_format((char *)&c, 1, fdatas, NULL);
-	/*
-	if (fdatas->flag & FLAG_LESS)
-		justify(&c, fdatas);
-	fdatas->width--;
-	while (fdatas->width > 0)
-	{
-		//if (!(fdatas->flag & FLAG_MORE) || fdatas->width > 1)
-		//	fdatas->out = ft_strnconcat(fdatas->out, fdatas->fill_char, 1);
-		fdatas->width--;
-	}
-	if (!(fdatas->flag & FLAG_LESS))
-		justify(&c, fdatas);
-	*/
 	return (0);
 }
