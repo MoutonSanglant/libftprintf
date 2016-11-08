@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/02 00:21:06 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/03 21:27:02 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 18:13:29 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	*st_memset(void *b, int c, size_t len)
 ** dynamically allocate memory inside `ret`
 ** returns string length
 */
-int		ft_vasprintf(char **ret, const char *format, va_list *ap)
+
+int			ft_vasprintf(char **ret, const char *format, va_list *ap)
 {
 	t_fdata		fdatas;
 
@@ -35,7 +36,7 @@ int		ft_vasprintf(char **ret, const char *format, va_list *ap)
 	fdatas.format = format;
 	fdatas.write_size = UINT_MAX;
 	parse(format, &fdatas);
-	if (!fdatas.out) // Returns -1 if a widechar is > 4 bytes
+	if (!fdatas.out)
 		return (-1);
 	*ret = fdatas.out;
 	if (fdatas.flag & FLAG_WRITE_ERROR)
@@ -43,7 +44,7 @@ int		ft_vasprintf(char **ret, const char *format, va_list *ap)
 	return (fdatas.bcount);
 }
 
-int		ft_asprintf(char **ret, const char *format, ...)
+int			ft_asprintf(char **ret, const char *format, ...)
 {
 	va_list		ap;
 	int			out;

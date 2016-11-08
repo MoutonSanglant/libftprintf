@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:48 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/03 21:10:13 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 18:15:10 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@ static void	*st_memset(void *b, int c, size_t len)
 ** write `size - 1` characters inside `str`, `str` needs to be big enough
 ** returns length of formated string (without \0)
 ** returns -1 on fail
-** TODO unimplemented
 */
-int		ft_vsnprintf(char *restrict str, size_t size, const char *restrict format, va_list *ap)
+
+int			ft_vsnprintf(char *restrict str, size_t size,
+									const char *restrict format, va_list *ap)
 {
 	t_fdata		fdatas;
 
@@ -38,15 +39,13 @@ int		ft_vsnprintf(char *restrict str, size_t size, const char *restrict format, 
 	fdatas.out = str;
 	fdatas.write_size = size - 1;
 	parse(format, &fdatas);
-	// won't work, parse should return an error case
-	//if (!fdatas.out) // Returns -1 if a widechar is > 4 bytes
-	//	return (-1);
 	if (fdatas.flag & FLAG_WRITE_ERROR)
 		return (-1);
 	return (fdatas.bcount);
 }
 
-int		ft_snprintf(char *restrict str, size_t size, const char *restrict format, ...)
+int			ft_snprintf(char *restrict str, size_t size,
+											const char *restrict format, ...)
 {
 	va_list		ap;
 	int			out;

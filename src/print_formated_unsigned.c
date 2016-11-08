@@ -6,13 +6,13 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:48 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 12:42:23 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 18:12:13 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
-static size_t		nblen(uintptr_t value)
+static size_t	nblen(uintptr_t value)
 {
 	size_t		l;
 
@@ -22,7 +22,7 @@ static size_t		nblen(uintptr_t value)
 	return (l);
 }
 
-static void	conversion(void *dst, const void *src, size_t n)
+static void		conversion(void *dst, const void *src, size_t n)
 {
 	char		*to;
 	char		*str;
@@ -49,10 +49,9 @@ void			print_formated_unsigned(t_fdata *fdatas)
 	size_t		length;
 
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE | FLAG_NUMBERSIGN);
-
 	if ((value = va_uint(fdatas)))
 	{
-		length = nblen(value); // Clamp with precision ??
+		length = nblen(value);
 		write_format(&value, length, fdatas, conversion);
 	}
 	else if (!(fdatas->flag & FLAG_NUMBERSIGN) && fdatas->precision == 0)

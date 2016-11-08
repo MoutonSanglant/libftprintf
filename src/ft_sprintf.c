@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:52 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/04 02:53:54 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 19:29:16 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ static void	*st_memset(void *b, int c, size_t len)
 ** returns -1 on fail
 ** TODO unimplemented
 */
-int		ft_vsprintf(char *restrict str, const char *restrict format, va_list *ap)
+
+int			ft_vsprintf(char *restrict str, const char *restrict format,
+																va_list *ap)
 {
 	t_fdata		fdatas;
 
@@ -38,15 +40,12 @@ int		ft_vsprintf(char *restrict str, const char *restrict format, va_list *ap)
 	fdatas.out = str;
 	fdatas.write_size = UINT_MAX;
 	parse(format, &fdatas);
-	// won't work, parse should return an error case
-	//if (!fdatas.out) // Returns -1 if a widechar is > 4 bytes
-	//	return (-1);
 	if (fdatas.flag & FLAG_WRITE_ERROR)
 		return (-1);
 	return (fdatas.bcount);
 }
 
-int		ft_sprintf(char *restrict str, const char *restrict format, ...)
+int			ft_sprintf(char *restrict str, const char *restrict format, ...)
 {
 	va_list		ap;
 	int			out;

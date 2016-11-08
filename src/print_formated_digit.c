@@ -6,13 +6,13 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:59 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/03 21:21:40 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 18:10:34 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
-static size_t		nblen(intptr_t value)
+static size_t	nblen(intptr_t value)
 {
 	size_t		l;
 
@@ -22,7 +22,7 @@ static size_t		nblen(intptr_t value)
 	return (l);
 }
 
-static void	conversion(void *dst, const void *src, size_t n)
+static void		conversion(void *dst, const void *src, size_t n)
 {
 	char		*to;
 	char		*str;

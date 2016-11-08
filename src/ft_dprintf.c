@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:22 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/16 04:24:20 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 18:07:03 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 ** write on filedescriptor fd
 ** returns number of character printed
 */
+
 int			ft_vdprintf(int fd, const char *restrict format, va_list *ap)
 {
 	char	*output;
@@ -23,12 +24,8 @@ int			ft_vdprintf(int fd, const char *restrict format, va_list *ap)
 
 	ret = -1;
 	output = NULL;
-	//if ((output = ft_vsprintf(format, ap)))
-		//ret = write(fd, output, ft_strlen(output));
 	if ((ret = ft_vasprintf(&output, format, ap)))
 		write(fd, output, ret);
-		//ret = write(fd, output, ret);
-	//ft_strdel(&output);
 	free(output);
 	return (ret);
 }

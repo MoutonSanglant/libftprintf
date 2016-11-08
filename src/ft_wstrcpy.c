@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:24 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/16 02:37:55 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 18:03:13 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,29 @@
 **	mask17 = 0b00000000000000010000000000000000; <=> (1 << 16)
 */
 
-static void		convert(unsigned char *h, char *str, int len)
+static int	convert_long(unsigned char *h, char *str, int len)
+{
+	int		i;
+
+	i = 0;
+	if (len <= 5)
+		str[i++] = (((*(h + 3) & 0b00000011)) | 0b11111000);
+	else
+	{
+		str[i++] = (((*(h + 3) & 0b01000000)) | 0b11111100);
+		str[i++] = (((*(h + 3) & 0b00111111)) | 0b10000000);
+	}
+	str[i++] = (((*(h + 2) & 0b11111100) >> 2) | 0b10000000);
+	return (i);
+}
+
+static void	convert(unsigned char *h, char *str, int len)
 {
 	int		i;
 
 	i = 0;
 	if (len <= 2)
-		str[i++] =
-			((((*h & 0b11000000) >> 6)
-				| ((*(h + 1) << 2)
-						& 0b00011111)) | 0b11000000);
+		str[i++] = ((((*h & 0xc0) >> 6) | ((*(h + 1) << 2) & 0x1f)) | 0xc0);
 	else
 	{
 		if (len <= 3)
@@ -73,16 +86,7 @@ static void		convert(unsigned char *h, char *str, int len)
 			if (len <= 4)
 				str[i++] = (((*(h + 2) & 0b00011100) >> 2) | 0b11110000);
 			else
-			{
-				if (len <= 5)
-					str[i++] = (((*(h + 3) & 0b00000011)) | 0b11111000);
-				else
-				{
-					str[i++] = (((*(h + 3) & 0b01000000)) | 0b11111100);
-					str[i++] = (((*(h + 3) & 0b00111111)) | 0b10000000);
-				}
-				str[i++] = (((*(h + 2) & 0b11111100) >> 2) | 0b10000000);
-			}
+				i += convert_long(h, &str[i], len);
 			str[i++] = ((((*(h + 1) & 0b11110000) >> 4) | ((*(h + 2) << 4)
 							& 0b00111111)) | 0b10000000);
 		}
@@ -92,8 +96,6 @@ static void		convert(unsigned char *h, char *str, int len)
 	str[i++] = ((*h & 0b00111111) | 0b10000000);
 }
 
-
-
 /*
 **	6-bytes extension
 **	=================
@@ -102,36 +104,29 @@ static void		convert(unsigned char *h, char *str, int len)
 **	else if (c <= MASK31)
 **		wchar_size = 6;
 */
+
 int			ft_wstrcpy(char *dst, wchar_t *src, int count)
 {
-	wchar_t	c;
-	int		wchar_size;
 	char	*end_ptr;
+	int		wchar_size;
+	wchar_t	c;
 
 	end_ptr = &dst[count];
-
 	while (dst < end_ptr)
 	{
-		c = *src;
-
-		src++;
-		if (c < 0)
+		c = *src++;
+		if (c < 0 || c > MASK21)
 			return (-1);
 		if (c <= MASK7)
 		{
-			*dst = c;
-			dst++;
+			*dst++ = c;
 			continue ;
 		}
+		wchar_size = 4;
 		if (c <= MASK11)
 			wchar_size = 2;
 		else if (c <= MASK16)
 			wchar_size = 3;
-		else if (c <= MASK21)
-			wchar_size = 4;
-		else
-			return (-1);
-
 		convert((unsigned char *)&c, dst, wchar_size);
 		dst += wchar_size;
 	}

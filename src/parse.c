@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/16 04:20:43 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 19:32:19 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,12 +140,11 @@ static void			expand(const char *format, t_fdata *fdatas)
 		else
 			print_formated_space(fdatas);
 	}
-	return;
+	return ;
 }
 
 void				parse(const char *format, t_fdata *fdatas)
 {
-	// Sur le '%'
 	if (*format == '%')
 		expand(&format[1], fdatas);
 	else

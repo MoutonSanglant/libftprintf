@@ -97,7 +97,6 @@ void			parse(const char *format, t_fdata *fdatas);
 
 void			write_to_buffer(const void *str, t_fdata *fdatas);
 void			write_format(const void *str, int count, t_fdata *fdatas, void (*cpy_fn)(void *, const void *, size_t));
-//void			write_format(const void *str, int count, t_fdata *fdatas, void (*cpy_fn)(it_fdata *, const void *, size_t, size_t));
 void			write_error(t_fdata *fdatas);
 
 void			remove_flags(t_fdata *fdatas, t_fflag mask);

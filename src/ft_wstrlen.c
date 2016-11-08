@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/14 17:20:15 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/10/16 02:37:06 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 18:05:17 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 **	else if (unicode_point <= MASK31)
 **		bcount += 6;
 */
+
 int			ft_wstrlen(wchar_t *wstr)
 {
 	wchar_t	unicode_point;

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:54 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 12:43:54 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 16:36:59 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static int		wintlen(wint_t unicode_point)
 		bcount = 5;
 	else if (unicode_point <= MASK31)
 		bcount = 6;
-
 	return (bcount);
 }
 
@@ -46,7 +45,6 @@ int				print_formated_widechar(t_fdata *fdatas)
 	int		length;
 
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE | FLAG_NUMBERSIGN);
-
 	fdatas->precision = -1;
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE);
 	c = (wint_t)va_arg(*fdatas->ap, wint_t);

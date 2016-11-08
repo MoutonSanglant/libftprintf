@@ -6,13 +6,11 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 19:02:39 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/04 04:32:14 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 21:41:27 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
-#include <stdio.h>
-
 
 static char	*ft_strchr(char const *s, int c)
 {
@@ -39,67 +37,70 @@ static void	cpy_to_buffer(void *dst, void const *src, size_t n)
 	}
 }
 
-static size_t	memset_buffer_segment(t_fdata *fdatas, int c, size_t offset, size_t len)
+static size_t	memset_seg(t_fdata *fdatas, int c, size_t off, size_t len)
 {
 	size_t	i;
 	char	*b;
 
-	len = (offset + len < fdatas->write_size) ? len : fdatas->write_size - offset;
-	b = &fdatas->out[offset];
+	len = (off + len < fdatas->write_size) ? len : fdatas->write_size - off;
+	b = &fdatas->out[off];
 	i = 0;
 	while (i < len)
 		b[i++] = (unsigned char)c;
 	return (i);
 }
 
-/*
-** Happens on malformated widechar
-*/
-void	write_error(t_fdata *fdatas)
+static void	set_sign(t_fdata *fdatas, int printed_char, char *sign)
 {
-	fdatas->flag |= FLAG_WRITE_ERROR;
-	write_to_buffer("", fdatas);
+	t_fflag	flags;
+
+	sign[0] = '+';
+	sign[1] = '\0';
+	flags = fdatas->flag;
+	if (flags & FLAG_SPACE)
+		sign[0] = ' ';
+	if (flags & FLAG_NEGATIVE)
+		sign[0] = '-';
+	if (flags & FLAG_NUMBERSIGN)
+	{
+		flags |= FLAG_PREFIXED;
+		sign[0] = '0';
+		if ((*fdatas->stop == 'o' || *fdatas->stop == 'O'))
+		{
+			if (printed_char < fdatas->precision)
+				flags &= ~FLAG_PREFIXED;
+		}
+		else
+		{
+			sign[1] = (*fdatas->stop == 'p') ? 'x' : *fdatas->stop;
+			sign[2] = '\0';
+		}
+	}
+	fdatas->flag = flags;
 }
 
 // width: nombre d'octets a imprimer
 // precision: nombre minimum de caracteres a afficher
 // printed_char: nombre de caracteres a imprimer (sans les modificateurs)
-void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy_fn)(void *dst, const void *, size_t n))
+void	write_format(const void *src, int printed_char, t_fdata *fdatas,
+							void (*cpy_fn)(void *dst, const void *, size_t n))
 {
+	char	sign[3];
+
 	t_fflag	flags;
 	int		start_offset;
 	int		write_offset;
 	int		sign_position;
-	char	*sign; // prefix
-
-	sign = "+";
-	sign_position = 0;
-	start_offset = 0;
-	flags = fdatas->flag;
 
 	int precision = fdatas->precision;
 	int to_write = (precision < printed_char) ? printed_char : precision;
 	int width = fdatas->width;
 
-	if (flags & FLAG_SPACE)
-		sign = " ";
-	if (flags & FLAG_NEGATIVE)
-		sign = "-";
-
-	if (flags & FLAG_NUMBERSIGN)
-	{
-		flags |= FLAG_PREFIXED;
-		if (*fdatas->stop == 'o' || *fdatas->stop == 'O')
-		{
-			if (printed_char < precision)
-				flags &= ~FLAG_PREFIXED;
-			sign = "0";
-		}
-		else if (*fdatas->stop == 'X')
-			sign = "0X";
-		else
-			sign = "0x";
-	}
+	sign[0] = '\0';
+	set_sign(fdatas, printed_char, sign);
+	flags = fdatas->flag;
+	sign_position = 0;
+	start_offset = 0;
 
 	if (width <= to_write)
 	{
@@ -115,13 +116,10 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 	fdatas->idx = fdatas->stop - fdatas->format + 1;
 	parse(&fdatas->format[fdatas->idx], fdatas);
 
-	// ** Expanding **
-
-	// write offset
 	write_offset = start_offset;
 
 	// DEBUG, if you see a '!' something is broken
-	memset_buffer_segment(fdatas, '!', write_offset, width);
+	memset_seg(fdatas, '!', write_offset, width);
 
 	if (flags & FLAG_LESS)
 	{
@@ -130,35 +128,35 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 		else if (flags & (FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE | FLAG_PREFIXED))
 			write_offset++;
 		sign_position = write_offset;
-		write_offset += memset_buffer_segment(fdatas, '0', write_offset, to_write - printed_char);
+		write_offset += memset_seg(fdatas, '0', write_offset, to_write - printed_char);
 	}
 	else if (flags & FLAG_ZERO)
 	{
 		// ON FLAGZERO WE PRINT ONLY precision characters
 		if (precision >= 0)
 		{
-			write_offset += memset_buffer_segment(fdatas, ' ', start_offset, width - to_write);
+			write_offset += memset_seg(fdatas, ' ', start_offset, width - to_write);
 			sign_position = write_offset;
 			// zerofill
-			write_offset += memset_buffer_segment(fdatas, '0', write_offset, to_write - printed_char);
+			write_offset += memset_seg(fdatas, '0', write_offset, to_write - printed_char);
 		}
 		else
 		{
 			// !! FULL WIDTH !!
-			memset_buffer_segment(fdatas, ' ', start_offset, width);
+			memset_seg(fdatas, ' ', start_offset, width);
 			// zerofill
 			sign_position = write_offset + 1;
 			if (sign[1])
 				sign_position += 1;
-			write_offset += memset_buffer_segment(fdatas, '0', write_offset, width - printed_char);
+			write_offset += memset_seg(fdatas, '0', write_offset, width - printed_char);
 		}
 	}
 	else
 	{
-		write_offset += memset_buffer_segment(fdatas, ' ', start_offset, width - to_write);
+		write_offset += memset_seg(fdatas, ' ', start_offset, width - to_write);
 		sign_position = write_offset;
 		// zerofill
-		write_offset += memset_buffer_segment(fdatas, '0', write_offset, to_write - printed_char);
+		write_offset += memset_seg(fdatas, '0', write_offset, to_write - printed_char);
 	}
 
 	cpy_fn = (cpy_fn) ? cpy_fn : &cpy_to_buffer;
@@ -183,7 +181,7 @@ void	write_format(const void *src, int printed_char, t_fdata *fdatas, void (*cpy
 	if (fdatas->flag & FLAG_LESS)
 	{
 		write_offset += printed_char;
-		memset_buffer_segment(fdatas, ' ', write_offset, width - to_write);
+		memset_seg(fdatas, ' ', write_offset, width - to_write);
 	}
 }
 
