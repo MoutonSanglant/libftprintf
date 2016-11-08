@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:41 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/04 04:29:41 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 12:42:06 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static void	print_constant(t_fdata *fdatas, char *str)
 	else
 		print_null(fdatas);
 }
+
 void			print_formated_string(t_fdata *fdatas, char *s)
 {
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE | FLAG_NUMBERSIGN);

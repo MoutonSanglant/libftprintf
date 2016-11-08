@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:45:50 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/03 21:21:30 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 12:44:06 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int				print_formated_char(t_fdata *fdatas)
 			return (-1);
 		return (0);
 	}
-
 	fdatas->precision = -1;
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE | FLAG_NUMBERSIGN);
 	write_format((char *)&c, 1, fdatas, NULL);

@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:48 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/04 04:30:53 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 12:42:23 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,27 +59,4 @@ void			print_formated_unsigned(t_fdata *fdatas)
 		write_format("", 0, fdatas, NULL);
 	else
 		write_format("0", 1, fdatas, NULL);
-
-	/*
-	char			*str;
-	int				len;
-
-	str = str_from_arg(fdatas);
-	if (str[0] == '0' && fdatas->precision == 0)
-		str[0] = '\0';
-	if (fdatas->precision >= 0)
-		fdatas->fill_char = " ";
-	len = ft_strlen(str);
-	write_format(str, ft_strlen(str), fdatas, NULL);
-	*/
-	/*
-	fdatas->precision = fdatas->precision - len;
-	fdatas->precision = (fdatas->precision > 0) ? fdatas->precision : 0;
-	fdatas->width = fdatas->width - fdatas->precision - len;
-	if (fdatas->flag & FLAG_LESS)
-		justify_left(fdatas, str);
-	else
-		justify_right(fdatas, str);
-		*/
-	//ft_strdel(&str);
 }

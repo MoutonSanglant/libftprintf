@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:07 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/04 04:29:14 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 12:44:52 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@ static size_t		nblen(uintptr_t value)
 	return (l);
 }
 
-/*
-** Write numbers backward then write '0x' forward
-*/
 static void	conversion(void *dst, const void *src, size_t n)
 {
 	char		*to;

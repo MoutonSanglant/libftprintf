@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:17 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/04 04:30:49 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 12:45:03 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,11 @@ void			print_formated_octal(t_fdata *fdatas)
 	size_t		length;
 
 	remove_flags(fdatas, FLAG_MORE | FLAG_SPACE);
-
 	if ((value = va_uint(fdatas)))
 	{
-		length = nblen(value); // Clamp with precision ??
+		length = nblen(value);
 		write_format(&value, length, fdatas, conversion);
 	}
-	//else if (!(fdatas->flag & FLAG_NUMBERSIGN) && fdatas->precision == 0)
 	else if (fdatas->precision == 0)
 		write_format("", 0, fdatas, NULL);
 	else

@@ -6,23 +6,13 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:54 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/04 04:30:30 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/08 12:43:54 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
-
-/*
-**	6-bytes extension
-**	=================
-** else if (unicode_point <= MASK26)
-**		bcount = 5;
-** else if (unicode_point <= MASK31)
-**		bcount = 6;
-*/
 static int		wintlen(wint_t unicode_point)
-//static int		wcharlen(wchar_t unicode_point)
 {
 	int		bcount;
 
@@ -37,9 +27,14 @@ static int		wintlen(wint_t unicode_point)
 		bcount = 3;
 	else if (unicode_point <= MASK21)
 		bcount = 4;
+	else if (unicode_point <= MASK26)
+		bcount = 5;
+	else if (unicode_point <= MASK31)
+		bcount = 6;
 
 	return (bcount);
 }
+
 static void	conversion(void *dst, const void *src, size_t n)
 {
 	ft_wstrcpy((char *)dst, (wchar_t *)src, n);
@@ -48,7 +43,6 @@ static void	conversion(void *dst, const void *src, size_t n)
 int				print_formated_widechar(t_fdata *fdatas)
 {
 	wint_t	c;
-	//wchar_t	c;
 	int		length;
 
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE | FLAG_NUMBERSIGN);
@@ -56,16 +50,12 @@ int				print_formated_widechar(t_fdata *fdatas)
 	fdatas->precision = -1;
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE);
 	c = (wint_t)va_arg(*fdatas->ap, wint_t);
-	//c = (wchar_t)va_arg(*fdatas->ap, wint_t);
-	// TODO: if wintlen > 4, printf returns -1 and doesn't format'
-	//length = wcharlen(c);
 	length = wintlen(c);
-	if (length < 0)
+	if (length < 0 || length > 4)
 	{
 		write_error(fdatas);
 		return (-1);
 	}
 	write_format(&c, length, fdatas, &conversion);
-
 	return (0);
 }
