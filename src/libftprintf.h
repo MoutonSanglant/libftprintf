@@ -33,7 +33,6 @@ int		ft_vsprintf(char *restrict str, const char *restrict format,
 int		ft_vsnprintf(char *restrict str, size_t size,
 									const char *restrict format, va_list *ap);
 
-
 # ifdef FORBIDDEN
 
 int		ft_fprintf(FILE *stream, const char *restrict format, ...);

@@ -6,13 +6,13 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:54 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 16:36:59 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 14:25:52 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
-static int		wintlen(wint_t unicode_point)
+static int	wintlen(wint_t unicode_point)
 {
 	int		bcount;
 
@@ -39,7 +39,7 @@ static void	conversion(void *dst, const void *src, size_t n)
 	ft_wstrcpy((char *)dst, (wchar_t *)src, n);
 }
 
-int				print_formated_widechar(t_fdata *fdatas)
+int			print_formated_widechar(t_fdata *fdatas)
 {
 	wint_t	c;
 	int		length;

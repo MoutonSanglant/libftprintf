@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/09 11:51:44 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/09 11:57:19 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 15:38:59 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ int		set_segment_width(t_fflag flags, int width, int print_len)
 
 void	write_padding(t_segment *seg, t_fdata *fdat, int print_len, int str_len)
 {
-	int		zerofill_len;
+	int		fill_len;
 
-	zerofill_len = print_len - str_len;
+	fill_len = print_len - str_len;
 	if (fdat->flag & FLAG_LESS)
 	{
 		if (fdat->flag & FLAG_HEX && fdat->flag & FLAG_NUMBERSIGN)
@@ -76,14 +76,15 @@ void	write_padding(t_segment *seg, t_fdata *fdat, int print_len, int str_len)
 		seg->sign_position = seg->write_offset + 1;
 		if (fdat->flag & FLAG_HEX && fdat->flag & FLAG_NUMBERSIGN)
 			seg->sign_position += 1;
-		zerofill_len = seg->width - str_len;
+		fill_len = seg->width - str_len;
 	}
 	else
 	{
-		seg->write_offset += segment_memset(fdat, ' ', seg->start_offset, seg->width - print_len);
+		seg->write_offset += segment_memset(fdat, ' ', seg->start_offset,
+														seg->width - print_len);
 		seg->sign_position = seg->write_offset;
 	}
-	seg->write_offset += segment_memset(fdat, '0', seg->write_offset, zerofill_len);
+	seg->write_offset += segment_memset(fdat, '0', seg->write_offset, fill_len);
 }
 
 void	write_prefix(t_segment *seg, t_fdata *fdat, int print_len, int str_len)
@@ -93,12 +94,14 @@ void	write_prefix(t_segment *seg, t_fdata *fdat, int print_len, int str_len)
 	sign_len = 0;
 	if (fdat->flag & FLAG_PREFIXED)
 	{
-		sign_len = (fdat->flag & FLAG_HEX && fdat->flag & FLAG_NUMBERSIGN) ? 2 : 1;
+		sign_len =
+			(fdat->flag & FLAG_HEX && fdat->flag & FLAG_NUMBERSIGN) ? 2 : 1;
 		print_len += sign_len;
 		seg->sign_position -= sign_len;
 		while (sign_len--)
 			fdat->out[seg->sign_position + sign_len] = seg->sign[sign_len];
 	}
 	if (fdat->flag & FLAG_LESS)
-		segment_memset(fdat, ' ', seg->write_offset + str_len, seg->width - print_len);
+		segment_memset(fdat, ' ', seg->write_offset + str_len,
+														seg->width - print_len);
 }

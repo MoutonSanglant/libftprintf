@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:17 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/09 11:01:20 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 15:07:20 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	nblen(uintptr_t value)
 	return (l);
 }
 
-static void		conversion(void *dst, const void *src, size_t n)
+static void	conversion(void *dst, const void *src, size_t n)
 {
 	char		*to;
 	char		*str;
@@ -43,7 +43,7 @@ static void		conversion(void *dst, const void *src, size_t n)
 	dst = (void *)str;
 }
 
-void			print_formated_octal(t_fdata *fdatas)
+void		print_formated_octal(t_fdata *fdatas)
 {
 	uintmax_t	value;
 	int			length;

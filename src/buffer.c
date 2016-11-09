@@ -6,24 +6,11 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 19:02:39 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/09 12:20:46 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 15:09:06 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
-
-static char	*ft_strchr(char const *s, int c)
-{
-	if ((char)c == '\0')
-		return (&((char *)s)[ft_strlen(s)]);
-	while (*s)
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	return (NULL);
-}
 
 static void		buffer_memcpy(void *dst, void const *src, size_t n)
 {
@@ -46,7 +33,7 @@ static void		buffer_memcpy(void *dst, void const *src, size_t n)
 **  ? str_len : fdatas->write_size - segment.write_offset;
 */
 
-void	write_format(const void *src, int str_len, t_fdata *fdatas,
+void			write_format(const void *src, int str_len, t_fdata *fdatas,
 							void (*write_fn)(void *dst, const void *, size_t n))
 {
 	t_fflag		flags;
@@ -71,7 +58,7 @@ void	write_format(const void *src, int str_len, t_fdata *fdatas,
 	write_fn(&fdatas->out[segment.write_offset], src, str_len);
 }
 
-static void	new_buffer(t_fdata *fdatas, int wcount)
+static void		new_buffer(t_fdata *fdatas, int wcount)
 {
 	if (wcount < fdatas->write_size)
 		fdatas->bcount += wcount;
@@ -82,7 +69,7 @@ static void	new_buffer(t_fdata *fdatas, int wcount)
 	fdatas->out[fdatas->bcount] = '\0';
 }
 
-void		write_to_buffer(const void *src, t_fdata *fdatas)
+void			write_to_buffer(const void *src, t_fdata *fdatas)
 {
 	const char	*specifier_addr;
 	int			idx;
@@ -104,7 +91,8 @@ void		write_to_buffer(const void *src, t_fdata *fdatas)
 	}
 	if (idx < fdatas->write_size)
 	{
-		wcount = (idx + wcount < fdatas->write_size) ? wcount : (int)fdatas->write_size - idx;
+		wcount = (idx + wcount < fdatas->write_size)
+									? wcount : (int)fdatas->write_size - idx;
 		buffer_memcpy(&fdatas->out[idx], src, wcount);
 	}
 }

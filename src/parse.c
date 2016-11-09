@@ -6,29 +6,11 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/09 08:59:04 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 15:13:14 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
-
-static char			*ft_strpbrk(const char *s1, const char *s2)
-{
-	int		i;
-
-	while (*s1)
-	{
-		i = 0;
-		while (s2[i])
-		{
-			if (*s1 == s2[i])
-				return ((char *)s1);
-			i++;
-		}
-		s1++;
-	}
-	return (NULL);
-}
 
 static int			get_precision_width_length(const char **f, t_fdata *d)
 {
@@ -89,12 +71,6 @@ static const char	*get_format_datas(const char *format,
 	return (specifier);
 }
 
-static int			is_long(const char *spec)
-{
-	return (*spec == 'S' || *spec == 'D'
-			|| *spec == 'O' || *spec == 'U' || *spec == 'C');
-}
-
 static int			check_common_spec(t_fdata *fdatas, const char *spec)
 {
 	if (*spec == 's' || *spec == 'S')
@@ -116,23 +92,23 @@ static int			check_common_spec(t_fdata *fdatas, const char *spec)
 
 static void			expand(const char *format, t_fdata *fdatas)
 {
-	const char	*spec;
+	const char	*s;
 
-	if (!(spec = ft_strpbrk(format, "sSpdDioOuUxXcC%")))
-		spec = get_format_datas(format, format + ft_strlen(format), fdatas);
+	if (!(s = ft_strpbrk(format, "sSpdDioOuUxXcC%")))
+		s = get_format_datas(format, format + ft_strlen(format), fdatas);
 	else
-		spec = get_format_datas(format, spec, fdatas);
-	fdatas->stop = spec;
-	if (is_long(spec))
+		s = get_format_datas(format, s, fdatas);
+	fdatas->stop = s;
+	if (*s == 'S' || *s == 'D' || *s == 'O' || *s == 'U' || *s == 'C')
 		fdatas->length = LENGTH_L;
-	if (!check_common_spec(fdatas, spec))
+	if (!check_common_spec(fdatas, s))
 	{
-		if (*spec == 'c')
+		if (*s == 'c')
 		{
 			if (print_formated_char(fdatas) < 0)
 				return ;
 		}
-		else if (*spec == 'C')
+		else if (*s == 'C')
 		{
 			if (print_formated_widechar(fdatas) < 0)
 				return ;
