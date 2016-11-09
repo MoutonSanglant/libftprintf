@@ -6,6 +6,8 @@ LDLIBS	=
 SUFFIX	= .o
 NAME	= libftprintf.a
 
+CORR_FILES = ./Makefile ./src
+
 # DEBUG routine
 ifeq ($(BUILD), Debug)
 	CFLAGS	+= -fsanitize=address -g -O0 -D DEBUG
@@ -41,7 +43,7 @@ endif
 OBJ = $(subst $(SRC_PREFIX), , $(SRC:.c=$(SUFFIX)))
 OBJ := $(addprefix $(OBJ_PREFIX), $(OBJ))
 
-.PHONY: all clean fclean re debug
+.PHONY: all clean fclean re debug correction
 
 all: $(NAME)
 
@@ -65,3 +67,8 @@ fclean: clean
 	/bin/rm -f $(NAME)
 
 re: fclean all
+
+correction_%:
+	@echo "\033[32mCopying libftprintf into \033[33m/tmp/$*\033[0m"
+	@mkdir -p /tmp/$*/libftprintf
+	@rsync -r --copy-links $(CORR_FILES) /tmp/$*/libftprintf
