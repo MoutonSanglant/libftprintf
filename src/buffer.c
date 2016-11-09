@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 19:02:39 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 21:41:27 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 01:05:39 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,18 @@ static char	*ft_strchr(char const *s, int c)
 	return (NULL);
 }
 
-static void	cpy_to_buffer(void *dst, void const *src, size_t n)
+static void		buffer_memcpy(void *dst, void const *src, size_t n)
 {
-	size_t	i;
+	char		*p_dst;
+	const char	*p_src;
 
-	i = 0;
-	while (i < n)
-	{
-		((char *)dst)[i] = ((char *)src)[i];
-		i++;
-	}
+	p_dst = dst;
+	p_src = src;
+	while (n--)
+		*p_dst++ = *p_src++;
 }
 
-static size_t	memset_seg(t_fdata *fdatas, int c, size_t off, size_t len)
+static size_t	segment_memset(t_fdata *fdatas, int c, size_t off, size_t len)
 {
 	size_t	i;
 	char	*b;
@@ -50,139 +49,138 @@ static size_t	memset_seg(t_fdata *fdatas, int c, size_t off, size_t len)
 	return (i);
 }
 
-static void	set_sign(t_fdata *fdatas, int printed_char, char *sign)
+typedef struct	s_segment
+{
+	int		width;
+	int		start_offset;
+	int		write_offset;
+	int		sign_position;
+	char	sign[3];
+}				t_segment;
+
+static void	set_segment_sign(t_segment *segment, t_fdata *fdatas, int str_len)
 {
 	t_fflag	flags;
 
-	sign[0] = '+';
-	sign[1] = '\0';
+	segment->sign[0] = '+';
+	segment->sign[1] = '\0';
 	flags = fdatas->flag;
 	if (flags & FLAG_SPACE)
-		sign[0] = ' ';
+		segment->sign[0] = ' ';
 	if (flags & FLAG_NEGATIVE)
-		sign[0] = '-';
+		segment->sign[0] = '-';
 	if (flags & FLAG_NUMBERSIGN)
 	{
 		flags |= FLAG_PREFIXED;
-		sign[0] = '0';
+		segment->sign[0] = '0';
 		if ((*fdatas->stop == 'o' || *fdatas->stop == 'O'))
 		{
-			if (printed_char < fdatas->precision)
+			if (str_len < fdatas->precision)
 				flags &= ~FLAG_PREFIXED;
 		}
 		else
 		{
-			sign[1] = (*fdatas->stop == 'p') ? 'x' : *fdatas->stop;
-			sign[2] = '\0';
+			segment->sign[1] = (*fdatas->stop == 'p') ? 'x' : *fdatas->stop;
+			segment->sign[2] = '\0';
 		}
 	}
 	fdatas->flag = flags;
 }
 
-// width: nombre d'octets a imprimer
-// precision: nombre minimum de caracteres a afficher
-// printed_char: nombre de caracteres a imprimer (sans les modificateurs)
-void	write_format(const void *src, int printed_char, t_fdata *fdatas,
-							void (*cpy_fn)(void *dst, const void *, size_t n))
+void	set_segment_width(t_segment *segment, int print_len, t_fflag flags)
 {
-	char	sign[3];
-
-	t_fflag	flags;
-	int		start_offset;
-	int		write_offset;
-	int		sign_position;
-
-	int precision = fdatas->precision;
-	int to_write = (precision < printed_char) ? printed_char : precision;
-	int width = fdatas->width;
-
-	sign[0] = '\0';
-	set_sign(fdatas, printed_char, sign);
-	flags = fdatas->flag;
-	sign_position = 0;
-	start_offset = 0;
-
-	if (width <= to_write)
+	if (segment->width <= print_len)
 	{
-		width = to_write;
-		if (sign[1])
-			width += 2;
-		else if (flags & (FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE | FLAG_PREFIXED))
-			width++;
+		segment->width = print_len;
+		if (segment->sign[1])
+			segment->width += 2;
+		else if (flags & FLAG_PREFIXED)
+			segment->width++;
 	}
+}
 
-	start_offset = fdatas->bcount;
-	fdatas->bcount += width;
-	fdatas->idx = fdatas->stop - fdatas->format + 1;
-	parse(&fdatas->format[fdatas->idx], fdatas);
+void		write_padding(t_fdata *fdatas, t_segment *segment, int print_len, int str_len)
+{
+	int			zerofill_len;
 
-	write_offset = start_offset;
-
-	// DEBUG, if you see a '!' something is broken
-	memset_seg(fdatas, '!', write_offset, width);
-
-	if (flags & FLAG_LESS)
+	zerofill_len = print_len - str_len;
+	if (fdatas->flag & FLAG_LESS)
 	{
-		if (sign[1])
-			write_offset += 2;
-		else if (flags & (FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE | FLAG_PREFIXED))
-			write_offset++;
-		sign_position = write_offset;
-		write_offset += memset_seg(fdatas, '0', write_offset, to_write - printed_char);
+		if (segment->sign[1])
+			segment->write_offset += 2;
+		else if (fdatas->flag & FLAG_PREFIXED)
+			segment->write_offset++;
+		segment->sign_position = segment->write_offset;
 	}
-	else if (flags & FLAG_ZERO)
+	else if (fdatas->flag & FLAG_ZERO && fdatas->precision < 0)
 	{
-		// ON FLAGZERO WE PRINT ONLY precision characters
-		if (precision >= 0)
-		{
-			write_offset += memset_seg(fdatas, ' ', start_offset, width - to_write);
-			sign_position = write_offset;
-			// zerofill
-			write_offset += memset_seg(fdatas, '0', write_offset, to_write - printed_char);
-		}
-		else
-		{
-			// !! FULL WIDTH !!
-			memset_seg(fdatas, ' ', start_offset, width);
-			// zerofill
-			sign_position = write_offset + 1;
-			if (sign[1])
-				sign_position += 1;
-			write_offset += memset_seg(fdatas, '0', write_offset, width - printed_char);
-		}
+		segment->sign_position = segment->write_offset + 1;
+		if (segment->sign[1])
+			segment->sign_position += 1;
+		zerofill_len = segment->width - str_len;
 	}
 	else
 	{
-		write_offset += memset_seg(fdatas, ' ', start_offset, width - to_write);
-		sign_position = write_offset;
-		// zerofill
-		write_offset += memset_seg(fdatas, '0', write_offset, to_write - printed_char);
+		segment->write_offset += segment_memset(fdatas, ' ', segment->start_offset, segment->width - print_len);
+		segment->sign_position = segment->write_offset;
 	}
+	segment->write_offset += segment_memset(fdatas, '0', segment->write_offset, zerofill_len);
+}
 
-	cpy_fn = (cpy_fn) ? cpy_fn : &cpy_to_buffer;
-	printed_char = (write_offset + (size_t)printed_char < fdatas->write_size) ? printed_char : (int)fdatas->write_size - write_offset;
-	cpy_fn(&fdatas->out[write_offset], src, printed_char);
-	if (flags & (FLAG_NEGATIVE | FLAG_MORE | FLAG_SPACE | FLAG_PREFIXED) || sign[1])
+
+
+int			write_prefix(t_segment *segment, t_fdata *fdatas)
+{
+	int sign_len;
+	int i;
+
+	i = 0;
+	sign_len = (segment->sign[1]) ? 2 : 1;
+	segment->sign_position -= sign_len;
+	while (i < sign_len)
 	{
-		int sign_len;
-		int i;
-
-		i = 0;
-		sign_len = ft_strlen(sign);
-		sign_position -= sign_len;
-		while (i < sign_len)
-		{
-			fdatas->out[sign_position + i] = sign[i];
-			i++;
-		}
-		to_write += sign_len;
+		fdatas->out[segment->sign_position + i] = segment->sign[i];
+		i++;
 	}
+	return (sign_len);
+}
 
+/*
+** segment.width: nombre d'octets a imprimer
+** precision: nombre minimum de caracteres a afficher
+** str_len: taille de la chaine à imprimer (sans modificateurs)
+** print_len: taille réelle à imprimer (avec modificateurs)
+*/
+
+void	write_format(const void *src, int str_len, t_fdata *fdatas,
+							void (*write_fn)(void *dst, const void *, size_t n))
+{
+	t_segment	segment;
+	int			print_len;
+
+	ft_bzero(&segment, sizeof(t_segment));
+	segment.width = fdatas->width;
+	segment.start_offset = fdatas->bcount;
+	set_segment_sign(&segment, fdatas, str_len);
+	print_len = (fdatas->precision < str_len) ? str_len : fdatas->precision;
+	set_segment_width(&segment, print_len, fdatas->flag);
+
+	// OUTPUT
+	fdatas->bcount += segment.width;
+	fdatas->idx = fdatas->stop - fdatas->format + 1;
+	parse(&fdatas->format[fdatas->idx], fdatas);
+
+	segment.write_offset = segment.start_offset;
+
+	write_padding(fdatas, &segment, print_len, str_len);
+	str_len = (segment.write_offset + (size_t)str_len < fdatas->write_size) ? str_len : (int)fdatas->write_size - segment.write_offset;
+
+	write_fn = (write_fn) ? write_fn : &buffer_memcpy;
+	write_fn(&fdatas->out[segment.write_offset], src, str_len);
+	if (fdatas->flag & FLAG_PREFIXED || segment.sign[1])
+		print_len += write_prefix(&segment, fdatas);
 	if (fdatas->flag & FLAG_LESS)
-	{
-		write_offset += printed_char;
-		memset_seg(fdatas, ' ', write_offset, width - to_write);
-	}
+		segment_memset(fdatas, ' ', segment.write_offset + str_len, segment.width - print_len);
 }
 
 void	write_to_buffer(const void *src, t_fdata *fdatas)
@@ -220,6 +218,6 @@ void	write_to_buffer(const void *src, t_fdata *fdatas)
 	if ((size_t)idx < fdatas->write_size)
 	{
 		wcount = (idx + (size_t)wcount < fdatas->write_size) ? wcount : (int)fdatas->write_size - idx;
-		cpy_to_buffer(&fdatas->out[idx], src, wcount);
+		buffer_memcpy(&fdatas->out[idx], src, wcount);
 	}
 }

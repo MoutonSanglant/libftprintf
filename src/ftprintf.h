@@ -42,6 +42,9 @@
 # define MASK26 0x03ffffff
 # define MASK31 0x7fffffff
 
+// NEG / MORE / SPACE / PREF
+//	FLAG_PREFIXED = 0x40,
+
 typedef enum	e_fflag
 {
 	FLAG_NONE = 0x0,
@@ -51,9 +54,9 @@ typedef enum	e_fflag
 	FLAG_NUMBERSIGN = 0x8,
 	FLAG_ZERO = 0x10,
 	FLAG_NEGATIVE = 0x20,
-	FLAG_PREFIXED = 0x40,
 	FLAG_FORMAT_ERROR = 0x100,
-	FLAG_WRITE_ERROR = 0x200
+	FLAG_WRITE_ERROR = 0x200,
+	FLAG_PREFIXED = 0x26
 }				t_fflag;
 
 typedef enum	e_flength
@@ -116,5 +119,7 @@ int				ft_wstrcpy(char *dst, wchar_t *src, int count);
 
 size_t			ft_strlen(char const *s);
 int				ft_atoi(char const *str);
+
+void			ft_bzero(void *s, size_t n);
 
 #endif
