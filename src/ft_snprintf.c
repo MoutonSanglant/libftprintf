@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:48 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 18:15:10 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 09:06:57 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int			ft_vsnprintf(char *restrict str, size_t size,
 	fdatas.format = format;
 	fdatas.out = str;
 	fdatas.write_size = size - 1;
+	if (fdatas.write_size < 0)
+		return (-1);
 	parse(format, &fdatas);
 	if (fdatas.flag & FLAG_WRITE_ERROR)
 		return (-1);

@@ -22,7 +22,6 @@
 
 # define HEX_TABLE(x) "0123456789abcdef"[x]
 # define HEX_TABLE_UPPER(x) "0123456789ABCDEF"[x]
-# define HEX_CHECK(s) (s == 'x') ? "0x" : "0X"
 
 # define isdigit(x) x >= '0' && x <= '9'
 
@@ -42,9 +41,6 @@
 # define MASK26 0x03ffffff
 # define MASK31 0x7fffffff
 
-// NEG / MORE / SPACE / PREF
-//	FLAG_PREFIXED = 0x40,
-
 typedef enum	e_fflag
 {
 	FLAG_NONE = 0x0,
@@ -54,9 +50,11 @@ typedef enum	e_fflag
 	FLAG_NUMBERSIGN = 0x8,
 	FLAG_ZERO = 0x10,
 	FLAG_NEGATIVE = 0x20,
+	FLAG_HEX = 0x40,
+	FLAG_OCTAL = 0x80,
 	FLAG_FORMAT_ERROR = 0x100,
 	FLAG_WRITE_ERROR = 0x200,
-	FLAG_PREFIXED = 0x26
+	FLAG_PREFIXED = FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE | FLAG_NUMBERSIGN
 }				t_fflag;
 
 typedef enum	e_flength
@@ -69,6 +67,15 @@ typedef enum	e_flength
 	LENGTH_J = 0x10,
 	LENGTH_Z = 0x20
 }				t_flength;
+
+typedef struct	s_segment
+{
+	int		width;
+	int		start_offset;
+	int		write_offset;
+	int		sign_position;
+	char	*sign;
+}				t_segment;
 
 /*
 ** t_fdata
@@ -90,36 +97,66 @@ typedef struct	s_fdata
 	int			precision;
 	int			bcount;
 	int			idx;
-	size_t		write_size;
+	int			write_size;
 }				t_fdata;
 
-intmax_t		va_int(t_fdata *fdatas);
-uintmax_t		va_uint(t_fdata *fdatas);
+void		parse(const char *format, t_fdata *fdatas);
 
-void			parse(const char *format, t_fdata *fdatas);
+/*
+** VA CONVERSION
+*/
+intmax_t	va_int(t_fdata *fdatas);
+uintmax_t	va_uint(t_fdata *fdatas);
 
-void			write_to_buffer(const void *str, t_fdata *fdatas);
-void			write_format(const void *str, int count, t_fdata *fdatas, void (*cpy_fn)(void *, const void *, size_t));
-void			write_error(t_fdata *fdatas);
+/*
+** BUFFER
+*/
 
-void			remove_flags(t_fdata *fdatas, t_fflag mask);
+void		write_to_buffer(const void *str, t_fdata *fdatas);
+void		write_format(const void *str, int str_len, t_fdata *fdatas,
+								void (*write_fn)(void *, const void *, size_t));
 
-int				print_formated_char(t_fdata *fdatas);
-int				print_formated_widechar(t_fdata *fdatas);
-void			print_formated_string(t_fdata *fdatas, char *s);
-void			print_formated_pointer(t_fdata *fdatas);
-void			print_formated_digit(t_fdata *fdatas);
-void			print_formated_octal(t_fdata *fdatas);
-void			print_formated_hex(t_fdata *fdatas);
-void			print_formated_unsigned(t_fdata *fdatas);
-void			print_formated_space(t_fdata *fdatas);
+/*
+** SEGMENT
+*/
 
-int				ft_wstrlen(wchar_t *wstr);
-int				ft_wstrcpy(char *dst, wchar_t *src, int count);
+int			set_segment_width(t_fflag flags, int width, int print_len);
+char		*set_segment_sign(t_fflag flags, char *sign, char stop);
+int			segment_memset(t_fdata *fdatas, int c, int off, int len);
+void		write_prefix(t_segment *s, t_fdata *f, int print_len, int str_len);
+void		write_padding(t_segment *s, t_fdata *f, int print_len, int str_len);
 
-size_t			ft_strlen(char const *s);
-int				ft_atoi(char const *str);
+void		remove_flags(t_fdata *fdatas, t_fflag mask);
 
-void			ft_bzero(void *s, size_t n);
+/*
+** FORMAT
+*/
+
+int			print_formated_char(t_fdata *fdatas);
+int			print_formated_widechar(t_fdata *fdatas);
+void		print_formated_string(t_fdata *fdatas, char *s);
+void		print_formated_pointer(t_fdata *fdatas);
+void		print_formated_digit(t_fdata *fdatas);
+void		print_formated_octal(t_fdata *fdatas);
+void		print_formated_hex(t_fdata *fdatas);
+void		print_formated_unsigned(t_fdata *fdatas);
+void		print_formated_space(t_fdata *fdatas);
+
+/*
+** WIDECHAR
+*/
+
+int			ft_wstrlen(wchar_t *wstr);
+int			ft_wstrcpy(char *dst, wchar_t *src, int count);
+
+size_t		ft_strlen(char const *s);
+int			ft_atoi(char const *str);
+void		ft_bzero(void *s, size_t n);
+
+/*
+** ERRORS
+*/
+
+void		write_error(t_fdata *fdatas);
 
 #endif

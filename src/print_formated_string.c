@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:41 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 19:34:06 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 08:58:18 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static void	print_null(t_fdata *fdatas)
 
 static void	print_wide(t_fdata *fdatas)
 {
-	wchar_t		*wstr;
-	int			length;
+	wchar_t	*wstr;
+	int		length;
 
 	if ((wstr = (wchar_t *)va_arg(*fdatas->ap, wchar_t *)))
 	{
@@ -52,8 +52,8 @@ static void	print_wide(t_fdata *fdatas)
 
 static void	print_ascii(t_fdata *fdatas)
 {
-	char		*str;
-	int			length;
+	char	*str;
+	int		length;
 
 	if ((str = va_arg(*fdatas->ap, char *)))
 	{

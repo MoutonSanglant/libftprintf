@@ -6,15 +6,15 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:17 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 18:10:54 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 11:01:20 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftprintf.h"
 
-static size_t	nblen(uintptr_t value)
+static int	nblen(uintptr_t value)
 {
-	size_t		l;
+	int		l;
 
 	l = 1;
 	while (value /= 8)
@@ -46,15 +46,18 @@ static void		conversion(void *dst, const void *src, size_t n)
 void			print_formated_octal(t_fdata *fdatas)
 {
 	uintmax_t	value;
-	size_t		length;
+	int			length;
 
-	remove_flags(fdatas, FLAG_MORE | FLAG_SPACE);
+	remove_flags(fdatas, FLAG_MORE | FLAG_SPACE | FLAG_NEGATIVE);
+	fdatas->flag |= FLAG_OCTAL;
 	if ((value = va_uint(fdatas)))
 	{
 		length = nblen(value);
+		if (length < fdatas->precision)
+			remove_flags(fdatas, FLAG_NUMBERSIGN);
 		write_format(&value, length, fdatas, conversion);
 	}
-	else if (fdatas->precision == 0)
+	else if (fdatas->precision == 0 && !(fdatas->flag & FLAG_NUMBERSIGN))
 		write_format("", 0, fdatas, NULL);
 	else
 	{

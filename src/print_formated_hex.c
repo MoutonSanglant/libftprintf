@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 21:46:07 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 18:11:27 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 11:14:07 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void			print_formated_hex(t_fdata *fdatas)
 	uintmax_t	value;
 
 	remove_flags(fdatas, FLAG_SPACE | FLAG_MORE);
+	fdatas->flag |= FLAG_HEX;
 	if ((value = va_uint(fdatas)))
 	{
 		if (*fdatas->stop == 'X')

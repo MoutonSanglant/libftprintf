@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 18:46:52 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 19:29:16 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 09:07:18 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ int			ft_vsprintf(char *restrict str, const char *restrict format,
 	fdatas.ap = ap;
 	fdatas.format = format;
 	fdatas.out = str;
-	fdatas.write_size = UINT_MAX;
+	fdatas.write_size = INT_MAX;
+	if (fdatas.write_size < 0)
+		return (-1);
 	parse(format, &fdatas);
 	if (fdatas.flag & FLAG_WRITE_ERROR)
 		return (-1);

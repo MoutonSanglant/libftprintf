@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/02 00:21:06 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 18:13:29 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 09:07:09 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int			ft_vasprintf(char **ret, const char *format, va_list *ap)
 	st_memset(&fdatas, 0, sizeof(t_fdata));
 	fdatas.ap = ap;
 	fdatas.format = format;
-	fdatas.write_size = UINT_MAX;
+	fdatas.write_size = INT_MAX;
+	if (fdatas.write_size < 0)
+		return (-1);
 	parse(format, &fdatas);
 	if (!fdatas.out)
 		return (-1);

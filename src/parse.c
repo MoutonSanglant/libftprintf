@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/08 19:32:19 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/09 08:59:04 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ static int			get_precision_width_length(const char **f, t_fdata *d)
 static const char	*get_format_datas(const char *format,
 									const char *specifier, t_fdata *d)
 {
-	d->flag = FLAG_NONE;
 	d->width = 0;
 	d->precision = -1;
+	d->flag = FLAG_NONE;
 	d->length = LENGTH_NONE;
 	while (format < specifier)
 	{
