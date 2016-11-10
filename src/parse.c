@@ -6,7 +6,7 @@
 /*   By: tdefresn <tdefresn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 17:58:25 by tdefresn          #+#    #+#             */
-/*   Updated: 2016/11/09 15:13:14 by tdefresn         ###   ########.fr       */
+/*   Updated: 2016/11/10 18:20:09 by tdefresn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ static int			get_precision_width_length(const char **f, t_fdata *d)
 	if (**f == '.' && (*f += 1))
 	{
 		d->precision = ft_atoi(*f);
-		while (isdigit(**f))
+		while (**f >= '0' && **f <= '9')
 			*f += 1;
 		*f -= 1;
 	}
-	else if (isdigit(**f))
+	else if (**f >= '0' && **f <= '9')
 	{
 		d->width = ft_atoi(*f);
-		while (isdigit(**f))
+		while (**f >= '0' && **f <= '9')
 			*f += 1;
 		*f -= 1;
 	}
