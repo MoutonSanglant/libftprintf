@@ -3,6 +3,36 @@ CFLAGS	= -Wall -Werror -Wextra
 LDFLAGS	=
 LDLIBS	=
 
+SRC	= buffer \
+conversion \
+error \
+flags \
+ft_asprintf \
+ft_atoi \
+ft_bzero \
+ft_dprintf \
+ft_eprintf \
+ft_fprintf \
+ft_printf \
+ft_snprintf \
+ft_sprintf \
+ft_strchr \
+ft_strlen \
+ft_strpbrk \
+ft_wstrcpy \
+ft_wstrlen \
+parse \
+print_formated_char \
+print_formated_digit \
+print_formated_hex \
+print_formated_octal \
+print_formated_pointer \
+print_formated_space \
+print_formated_string \
+print_formated_unsigned \
+print_formated_widechar \
+segment
+
 SUFFIX	= .o
 NAME	= libftprintf.a
 
@@ -33,11 +63,11 @@ endif
 SRC_PREFIX = ./src/
 OBJ_PREFIX = ./obj/
 
-SRC	=	$(shell ls $(SRC_PREFIX)*.c)
-
 ifeq ($(BUILD), Debug)
 	SRC +=
 endif
+
+SRC := $(addsuffix .c, $(SRC))
 
 OBJ = $(subst $(SRC_PREFIX), , $(SRC:.c=$(SUFFIX)))
 OBJ := $(addprefix $(OBJ_PREFIX), $(OBJ))
